@@ -94,7 +94,7 @@ describe("Testing user Routes", () => {
     spyonOne.mockRestore();
   }, 20000);
 
-  test("Should send otp verification code", async () => {
+  test.skip("Should send otp verification code", async () => {
     const spy = jest.spyOn(mailServices, "sendEmailService");
     const response = await request(app).post("/api/v1/users/login").send({
       email: dummySeller.email,

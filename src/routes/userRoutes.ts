@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { fetchAllUsers, createUserController, userLogin, updatePassword, tokenVerification } from "../controllers/userControllers";
-import { emailValidation, validateSchema } from "../middleware/validator";
+import { emailValidation, validateSchema } from "../middlewares/validator";
 import signUpSchema from "../schemas/signUpSchema";
 import { isLoggedIn } from "../middlewares/isLoggedIn";
 import { passwordUpdateSchema } from "../schemas/passwordUpdate";
