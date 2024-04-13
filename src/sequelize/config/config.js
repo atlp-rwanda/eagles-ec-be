@@ -1,6 +1,6 @@
 const dotenv = require("dotenv");
-dotenv.config();
 
+dotenv.config();
 module.exports = {
   development: {
     url: process.env.DB_CONNECTION,

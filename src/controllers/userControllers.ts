@@ -1,12 +1,11 @@
 import { Request, Response } from "express";
 import * as userService from "../services/user.service";
-import User from "../sequelize/models/user";
 
 export const fetchAllUsers = async (req: Request, res: Response) => {
   try {
     // const users = await userService.getAllUsers();
 
-    const users = await User.findAll();
+    const users = await userService.getAllUsers();
 
     if (users.length <= 0) {
       return res.status(404).json({
