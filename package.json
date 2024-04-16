@@ -11,7 +11,11 @@
     "seed": "npx sequelize-cli db:seed:all",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint --fix .",
-    "test": " npm run lint && jest --detectOpenHandles --coverage"
+    "test": " npm run lint && jest --detectOpenHandles --coverage",
+    "prepare": "husky install"
+  },
+  "lint-staged": {
+    "**/*": "prettier --write --ignore-unknown"
   },
   "author": "atlp",
   "license": "MIT",
@@ -28,9 +32,11 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jest": "^28.2.0",
+    "husky": "^9.0.11",
     "jest": "^29.7.0",
+    "lint-staged": "^15.2.2",
     "nodemon": "^3.1.0",
-    "prettier": "^3.2.5",
+    "prettier": "3.2.5",
     "sequelize-cli": "^6.6.2",
     "supertest": "^6.3.4",
     "ts-jest": "^29.1.2",
