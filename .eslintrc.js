@@ -20,6 +20,7 @@ module.exports = {
     'no-shadow': ['error', { allow: ['req', 'res', 'err'] }],
     'valid-jsdoc': [
       'error',
+
       {
         requireReturn: true,
         requireReturnType: true,
