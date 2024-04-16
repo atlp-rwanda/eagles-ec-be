@@ -1,8 +1,7 @@
 module.exports = {
   root: true,
   plugins: ['jest'],
-  extends: ['airbnb-base', 'eslint:recommended', ' plugin:jest/recommended'],
-  plugins: ['jest'],
+  extends: ['airbnb-base', 'eslint:recommended', 'plugin:jest/recommended'],
   env: {
     node: true,
     es6: true,
