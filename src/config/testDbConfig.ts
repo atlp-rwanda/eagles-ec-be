@@ -1,7 +1,9 @@
 import { Sequelize } from "sequelize";
 import { env } from "../utils/env";
 
-export const testSequelize = new Sequelize(env.db_url);
+export const testSequelize = new Sequelize(env.test_db, {
+  dialect: "postgres",
+});
 export const testDbConnection = async () => {
   try {
     await testSequelize.authenticate();

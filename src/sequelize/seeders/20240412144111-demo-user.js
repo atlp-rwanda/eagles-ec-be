@@ -1,7 +1,7 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert("Users", [
+    return queryInterface.bulkInsert("users", [
       {
         name: "Rukundo Soleil",
         username: "soleil00",
@@ -10,17 +10,17 @@ module.exports = {
         createdAt: new Date(),
         updatedAt: new Date(),
       },
-      {
-        name: "test user",
-        username: "yes",
-        email: "soleil@soleil0w.com",
-        password: "soleil0w0",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      },
+      // {
+      //   name: "test user",
+      //   username: "yes",
+      //   email: "soleil@soleil0w.com",
+      //   password: "soleil0w0",
+      //   createdAt: new Date(),
+      //   updatedAt: new Date(),
+      // },
     ]);
   },
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete("Users", null, {});
+    return queryInterface.bulkDelete("users", null, {});
   },
 };

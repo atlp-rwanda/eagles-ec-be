@@ -1,7 +1,9 @@
 import { Sequelize } from "sequelize";
 import { env } from "../utils/env";
 
-const sequelize = new Sequelize(env.db_url);
+const sequelize = new Sequelize(env.db_url, {
+  dialect: "postgres",
+});
 
 export const connect = async () => {
   try {
