@@ -17,6 +17,7 @@
   "lint-staged": {
     ".ts": [
       "eslint --fix",
+      "npm run test",
       "jest --bail --findRelatedTests"
     ],
     "**/*": "prettier --write --ignore-unknown"
@@ -30,7 +31,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "link-staged"
+      "pre-commit": "npm run lint-staged"
     }
   },
   "author": "atlp",
