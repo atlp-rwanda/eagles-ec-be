@@ -15,7 +15,23 @@
     "prepare": "husky install"
   },
   "lint-staged": {
+    ".ts": [
+      "eslint --fix",
+      "jest --bail --findRelatedTests"
+    ],
     "**/*": "prettier --write --ignore-unknown"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest",
+      "prettier"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "link-staged"
+    }
   },
   "author": "atlp",
   "license": "MIT",
@@ -25,8 +41,8 @@
     "@types/jest": "^29.5.12",
     "@types/node": "^20.12.7",
     "@types/supertest": "^6.0.2",
-    "@typescript-eslint/eslint-plugin": "^7.6.0",
-    "@typescript-eslint/parser": "^7.6.0",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
     "eslint": "^8.57.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.1.0",
