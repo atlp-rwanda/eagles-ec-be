@@ -19,3 +19,7 @@
 ### Deployed link
 
 [Eagles EC](https://eagles-ec-be-development.onrender.com/)
+
+## Integrated Third Parties
+- Slack 
+- Pivotal Tracker
