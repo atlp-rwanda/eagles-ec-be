@@ -22,4 +22,14 @@ describe("Testing user Routes", () => {
     expect(spy2).toHaveBeenCalled();
     expect(response.statusCode).toBe(200);
   }, 20000);
+
+  test("Should return status 200 to indicate that user logged in ",async() =>{
+    const loggedInUser = {
+      email:"alice@example.com",
+      password:`test123`,
+    };
+    const  response = await request(app).post("api/v1/users/login")
+    .send(loggedInUser)
+    expect(response.status).toBe(200);
+  })
 });
