@@ -11,11 +11,7 @@
     "seed": "npx sequelize-cli db:seed:all",
     "lint": "npx eslint .",
     "lint:fix": "npx eslint --fix .",
-<<<<<<< HEAD
-    "test": "jest --detectOpenHandles --coverage"
-=======
     "test": "cross-env NODE_ENV=test jest --detectOpenHandles --coverage"
->>>>>>> a44a22c746b0a8d3c48c0576b86d096726854121
   },
   "author": "atlp",
   "license": "MIT",
