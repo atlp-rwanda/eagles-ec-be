@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import * as userService from "../services/user.service";
 import { generateToken } from "../utils/jsonwebtoken";
-import { comparePasswords } from "../utils/passwordCopere";
+import { comparePasswords } from "../utils/passwordCopare";
 import { loggedInUser} from "../services/user.service";
 
 export const fetchAllUsers = async (req: Request, res: Response) => {
@@ -30,20 +30,20 @@ export const fetchAllUsers = async (req: Request, res: Response) => {
 };
 
 export const userLogin =  async(req:Request,res:Response) =>{
-  const {email,password} = req.body;
+  const {email, password} = req.body;
   const user = await loggedInUser(email);
   const accessToken = await generateToken(user);
   if(!user){
     res.status(404).json({
       status:404,
-      message:'User Not Found ! Please Register new ancount '
+      message:'User Not Found ! Please Register new ancount'
     }); 
   }else{
   const match = await comparePasswords(password,user.password);
       if(!match){
         res.status(401).json({
           status:401,
-          message:'Bad combination of email and password!'
+          message:' User email or password is incorrect!'
        });
       }else{
         res.status(200).json({
