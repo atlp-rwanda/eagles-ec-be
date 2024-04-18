@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import * as userService from "../services/user.service";
 import { generateToken } from "../utils/jsonwebtoken";
-import { comparePasswords } from "../utils/passwordCopare";
+import { comparePasswords } from "../helpers/comparePassword";
 import { loggedInUser} from "../services/user.service";
 
 export const fetchAllUsers = async (req: Request, res: Response) => {
@@ -26,7 +26,7 @@ export const fetchAllUsers = async (req: Request, res: Response) => {
       message: "Internal server error",
       error: error.message,
     });
-  }
+  };
 };
 
 export const userLogin =  async(req:Request,res:Response) =>{
@@ -50,7 +50,9 @@ export const userLogin =  async(req:Request,res:Response) =>{
           status:200,
           message:"Logged in",
           token:accessToken
-        })
-      }
-    }
-}
+        });
+      };
+    };
+};
+
+
