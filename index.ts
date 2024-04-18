@@ -1,15 +1,15 @@
-import sequelize, { connect } from "./src/config/dbConnection";
-import { env } from "./src/utils/env";
-import app from "./src/utils/server";
+import sequelize, { connect } from "./src/config/dbConnection"
+import { env } from "./src/utils/env"
+import app from "./src/utils/server"
 
 app.listen(env.port, async () => {
-  await connect();
+  await connect()
   await sequelize
     .sync()
     .then(() => {
-      console.log(" db synced and server is running");
+      console.log(` db synced and server is running on port ${env.port}`)
     })
     .catch((error: any) => {
-      console.log(error.message);
-    });
-});
+      console.log(error.message)
+    })
+})

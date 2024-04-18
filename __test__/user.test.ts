@@ -1,16 +1,16 @@
 import request from "supertest"
 import { beforeAll, afterAll, jest, test } from "@jest/globals"
 import app from "../src/utils/server"
-import { testDbConnection, testSequelize } from "../src/config/testDbConfig"
 import User from "../src/sequelize/models/user"
 import * as userServices from "../src/services/user.service"
+import sequelize, { connect } from "../src/config/dbConnection"
 
 describe("Testing user Routes", () => {
   beforeAll(async () => {
     try {
-      await testDbConnection()
+      await connect()
     } catch (error) {
-      testSequelize.close()
+      sequelize.close()
     }
   }, 20000)
 
@@ -18,9 +18,7 @@ describe("Testing user Routes", () => {
     const spy = jest.spyOn(User, "findAll")
     const spy2 = jest.spyOn(userServices, "getAllUsers")
     const response = await request(app).get("/api/v1/users")
-
     expect(spy).toHaveBeenCalled()
-
     expect(spy2).toHaveBeenCalled()
   }, 20000)
 })

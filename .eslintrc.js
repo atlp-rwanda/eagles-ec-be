@@ -18,7 +18,7 @@ module.exports = {
     "no-unused-vars": "off",
     "global-require": "off",
     semi: "off",
-    quotes: 0,
+    quotes: ["error", "double"],
     "operator-linebreak": "off",
     "implicit-arrow-linebreak": "off",
     "import/no-dynamic-require": "off",
