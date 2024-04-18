@@ -3,15 +3,7 @@ import { env } from "../utils/env";
 
 const envT = process.env.NODE_ENV;
 
-// const sequelize = new Sequelize(envT === "test" ? env.test_db_url : env.db_url);
-const sequelize = new Sequelize(envT === "test" ? env.test_db_url : env.db_url, {
-  dialectOptions: {
-    ssl: {
-      require: true, // This will force SSL
-      rejectUnauthorized: false // Disable SSL certificate validation, you can set it to true if you want to validate the certificate
-    }
-  }
-});
+const sequelize = new Sequelize(envT === "test" ? env.test_db_url : env.db_url);
 
 export const connect = async () => {
   try {
