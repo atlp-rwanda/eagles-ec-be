@@ -17,7 +17,11 @@
   "license": "MIT",
   "devDependencies": {
     "@eslint/js": "^9.0.0",
+<<<<<<< HEAD
     "@types/bcrypt": "^5.0.2",
+=======
+    "@types/bcryptjs": "^2.4.6",
+>>>>>>> fbba50d04172b5b4629d94348058fb72aa795c48
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/jest": "^29.5.12",
@@ -31,7 +35,10 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jest": "^28.2.0",
+<<<<<<< HEAD
     "eslint-plugin-react": "^7.34.1",
+=======
+>>>>>>> fbba50d04172b5b4629d94348058fb72aa795c48
     "globals": "^15.0.0",
     "jest": "^29.7.0",
     "nodemon": "^3.1.0",
@@ -44,8 +51,12 @@
     "typescript-eslint": "^7.7.0"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@types/jsonwebtoken": "^9.0.6",
     "bcrypt": "^5.1.1",
+=======
+    "bcryptjs": "^2.4.3",
+>>>>>>> fbba50d04172b5b4629d94348058fb72aa795c48
     "cors": "^2.8.5",
     "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
