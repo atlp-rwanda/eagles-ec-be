@@ -14,6 +14,7 @@ app.use(cors());
 
 app.use("/", homeRoute);
 app.use("/api/v1", appROutes);
+app.use("/api/v1", userRoutes);
 app.use("/docs", docRouter);
 
 export default app;
