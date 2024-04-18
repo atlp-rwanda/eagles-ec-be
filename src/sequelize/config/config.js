@@ -13,7 +13,7 @@ module.exports = {
     },
   },
   test: {
-    url: process.env.DB_CONNECTION,
+    url: process.env.TEST_DB,
     dialect: "postgres",
     dialectOptions: {
       ssl: {
