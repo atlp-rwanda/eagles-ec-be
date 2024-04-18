@@ -4,6 +4,7 @@ import app from "../src/utils/server";
 import User from "../src/sequelize/models/user";
 import * as userServices from "../src/services/user.service";
 import sequelize, { connect } from "../src/config/dbConnection";
+import {env}  from "../src/utils/env";
 
 describe("Testing user Routes", () => {
   beforeAll(async () => {
@@ -24,14 +25,14 @@ describe("Testing user Routes", () => {
 
   test("Should return status 200 to indicate that user logged in ",async() =>{
     const loggedInUser ={
-      email:"ivan@gmail.com",
-      password:`1234567`,
-    }
+      email:env.email,
+      password:env.test_password,
+    };
     const spyonOne = jest.spyOn(User,"findOne").mockResolvedValueOnce({
       //@ts-ignore
-      email:"ivan@gmail.com",
-      password:"$2a$10$zonhxs7J7h3ls7nv781Xoea1X4dJoui3t0/7gRPR3Ek4Rgzg6RAQe",
-    })
+      email:env.email,
+      password:env.hashed_password,
+    });
     const  response = await request(app).post("/api/v1/users/login")
     .send(loggedInUser)
     expect(response.status).toBe(200);
@@ -39,17 +40,17 @@ describe("Testing user Routes", () => {
   })
   test("Should return status 401 to indicate Unauthorized user",async() =>{
     const loggedInUser ={
-      email:"ivan@gmail.com",
-      password:`1234560`,
-    }
+      email:env.email,
+      password:env.test_incorrect_password,
+    };
     const spyonOne = jest.spyOn(User,"findOne").mockResolvedValueOnce({
       //@ts-ignore
-      email:"ivan@gmail.com",
-      password:"$2a$10$zonhxs7J7h3ls7nv781Xoea1X4dJoui3t0/7gRPR3Ek4Rgzg6RAQe",
-    })
+      email:env.email,
+      password:env.hashed_password,
+    });
     const  response = await request(app).post("/api/v1/users/login")
     .send(loggedInUser)
     expect(response.status).toBe(401);
     spyonOne.mockRestore();
-  })
+  });
 });

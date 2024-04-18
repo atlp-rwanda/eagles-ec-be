@@ -21,12 +21,12 @@ export const loggedInUser = async(email:string) => {
         where: { email: email }
       });
       if(!user){
-          return false
+          return false;
       }else{
           return user;
       }
   }catch(err:any){
-      throw new Error(err.message)
-  }
-}
+      throw new Error(err.message);
+  };
+};
 
