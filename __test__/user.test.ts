@@ -2,7 +2,6 @@ import request from "supertest";
 import { beforeAll, afterAll, jest, test } from "@jest/globals";
 import app from "../src/utils/server";
 import User from "../src/sequelize/models/user";
-import TestUser from "../src/sequelize/models/testUser";
 import * as userServices from "../src/services/user.service";
 import sequelize, { connect } from "../src/config/dbConnection";
 

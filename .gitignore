@@ -1,5 +1,9 @@
 /node_modules
 /.env
 /package-lock.json
+<<<<<<< HEAD
 dist
 middleware
+=======
+/coverage
+>>>>>>> 9f792ba (feat(sign up): implement users sign up)

@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import appROutes from "../routes";
+import userRoutes from "../routes/userRoutes";
 import homeRoute from "../routes/homeRoutes";
 import docRouter from "../docs/swagger";
 
