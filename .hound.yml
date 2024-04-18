@@ -1,0 +1,13 @@
+fail_on_violations: true
+
+scss:
+  enabled: false
+
+stylelint:
+  config_file: .stylelintrc.json
+  enabled: true
+
+eslint:
+  enabled: true
+  version: 8.57.0
+  config_file: .eslintrc

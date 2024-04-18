@@ -1,9 +1,9 @@
-import request from 'supertest'
-import { beforeAll, afterAll, jest, test } from '@jest/globals'
-import app from '../src/utils/server'
-import { testDbConnection, testSequelize } from '../src/config/testDbConfig'
+import request from "supertest"
+import { beforeAll, afterAll, jest, test } from "@jest/globals"
+import app from "../src/utils/server"
+import { testDbConnection, testSequelize } from "../src/config/testDbConfig"
 
-describe('Testing Home route', () => {
+describe("Testing Home route", () => {
   beforeAll(async () => {
     try {
       await testDbConnection()
@@ -12,13 +12,9 @@ describe('Testing Home route', () => {
     }
   }, 20000)
 
-  test(
-    'servr should return status code of 200 --> given' / '',
-    async () => {
-      const response = await request(app).get('/')
+  test("server should return status code of 200 --> given / ", async () => {
+    const response = await request(app).get("/")
 
-      expect(response.status).toBe(200)
-    },
-    20000,
-  )
+    expect(response.status).toBe(200)
+  }, 20000)
 })
