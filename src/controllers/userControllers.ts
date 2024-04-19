@@ -3,6 +3,7 @@ import * as userService from "../services/user.service";
 import { generateToken } from "../utils/jsonwebtoken";
 import { comparePasswords } from "../helpers/comparePassword";
 import { loggedInUser} from "../services/user.service";
+import { createUserService, getUserByEmail  } from "../services/user.service";
 
 export const fetchAllUsers = async (req: Request, res: Response) => {
   try {
@@ -55,3 +56,25 @@ export const userLogin =  async(req:Request,res:Response) =>{
     };
 };
 
+
+export const createUserController = async (req: Request, res: Response) => {
+  try {
+    const { name, email, username, password } = req.body;
+    const user = await createUserService(name, email, username, password);
+    if (!user) {
+      return res.status(409).json({ 
+        status: 409, 
+        message: 'User already exists' });
+    }
+    res.status(201).json({ 
+      status: 201, 
+      message: "User successfully created." 
+    });
+    
+  } catch (err: any) {
+    if (err.name === 'UnauthorizedError' && err.message === 'User already exists') {
+      return res.status(409).json({ error: 'User already exists' });
+    }
+    res.status(500).json({ error: err });
+  }
+};
