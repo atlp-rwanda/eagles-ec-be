@@ -4,12 +4,11 @@ import {
     createUserController,
     userLogin  } 
 from "../controllers/userControllers";
-import { dataValidation } from "../moddewares/joiValifdation";
-
+import { loginDataValidation } from "../middlewares/joiValidation";
 const userRoutes = Router();
 
 userRoutes.get("/", fetchAllUsers);
-userRoutes.post('/login',dataValidation,userLogin);
+userRoutes.post('/login',loginDataValidation,userLogin);
 userRoutes.post("/register", createUserController);
 
 

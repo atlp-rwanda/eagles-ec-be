@@ -33,8 +33,9 @@ export const userLogin =  async(req:Request,res:Response) =>{
   const user = await loggedInUser(email);
   const accessToken = await generateToken(user);
   if(!user){
-    res.status(404).json({
-      status:404,
+
+    res.status(401).json({
+      status:401,
       message:'Invalid credentials'
     }); 
   }else{
@@ -42,7 +43,7 @@ export const userLogin =  async(req:Request,res:Response) =>{
       if(!match){
         res.status(401).json({
           status:401,
-          message:' User email or password is incorrect!'
+          message:' Invalid credentials'
        });
       }else{
         res.status(200).json({
