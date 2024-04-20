@@ -35,7 +35,7 @@ export const userLogin =  async(req:Request,res:Response) =>{
   if(!user){
     res.status(404).json({
       status:404,
-      message:'User Not Found ! Please Register new ancount'
+      message:'Invalid credentials'
     }); 
   }else{
   const match = await comparePasswords(password,user.password);

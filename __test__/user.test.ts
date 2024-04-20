@@ -63,7 +63,7 @@ test('should return 500 when registering with an invalid credential', async () =
   test("Should return status 401 to indicate Unauthorized user",async() =>{
     const loggedInUser ={
       email:userData.email,
-      password:"test",
+      password:"test12345",
     };
     const spyonOne = jest.spyOn(User,"findOne").mockResolvedValueOnce({
       //@ts-ignore
