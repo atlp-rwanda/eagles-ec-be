@@ -1,9 +1,10 @@
 import { Request, Response } from "express";
 import * as userService from "../services/user.service";
-import { generateToken } from "../utils/jsonwebtoken";
+import { generateToken, generateUserToken } from "../utils/jsonwebtoken";
 import { comparePasswords } from "../utils/comparePassword";
 import { loggedInUser} from "../services/user.service";
 import { createUserService, getUserByEmail, updateUserPassword } from "../services/user.service";
+import User, { UserAttributes } from "../sequelize/models/users";
 import { hashedPassword } from "../utils/hashPassword";
 
 export const fetchAllUsers = async (req: Request, res: Response) => {
@@ -112,3 +113,50 @@ export const updatePassword = async (req: Request, res: Response) => {
     })
   }
 }
+export const handleSuccess = async (req: Request, res: Response) => {
+  // @ts-ignore
+  const user: UserProfile = req.user;
+
+  try {
+    let token;
+    let foundUser: any = await User.findOne({
+      where: { email: user.emails[0].value }
+    });
+
+    if (!foundUser) {
+      const newUser: UserAttributes = await User.create({
+        name: user.displayName,
+        email: user.emails[0].value,
+        username: user.name.familyName,
+        password: user.displayName,
+      });
+      token = await generateUserToken(newUser);
+      foundUser = newUser;
+    } else {
+      token = await generateUserToken(foundUser);
+    }
+
+    return res.status(200).json({
+      token: token,
+      message: 'success',
+      data: foundUser,
+    });
+  } catch (error: any) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+
+export const handleFailure = async (req: Request, res: Response) => {
+  try {
+    res.status(401).json({
+      message: "unauthorized",
+    });
+  } catch (error: any) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};

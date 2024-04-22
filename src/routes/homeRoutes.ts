@@ -14,5 +14,15 @@ homeRoute.get("/", (req: Request, res: Response) => {
     });
   }
 });
+homeRoute.get("/login", (req: Request, res: Response) => {
+  try {
+    res.send("<a href='/api/v1/users/login/google'>click to here to Login</a>");
+  } catch (error: any) {
+    res.status(500).json({
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+});
 
 export default homeRoute;
