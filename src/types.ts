@@ -5,6 +5,6 @@ export interface IUser {
   email: string;
   password: string;
   isMerchant?: boolean;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
 }
