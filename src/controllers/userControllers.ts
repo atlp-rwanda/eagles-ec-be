@@ -97,7 +97,7 @@ export const handleSuccess = async (req: Request, res: Response) => {
         name: user.displayName,
         email: user.emails[0].value,
         username:'user.name.familyName',
-        password: user.emails[0].value,
+        password: null,
       });
      const token = generateUserToken(newUser)
      return  res.status(201).json({

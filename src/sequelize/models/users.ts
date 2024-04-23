@@ -6,7 +6,7 @@ export interface UserAttributes{
   name: string,
   username: string,
   email:string,
-  password:string,
+  password?:string | null,
   createdAt?:Date,
   updatedAt?:Date
 }
