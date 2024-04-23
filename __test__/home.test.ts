@@ -12,8 +12,14 @@ describe("Testing Home route", () => {
     }
   }, 20000);
 
-  test("servr should return status code of 200 --> given'/'", async () => {
+  test("server should return status code of 200 --> given'/'", async () => {
     const response = await request(app).get("/");
+
+    expect(response.status).toBe(200);
+  }, 20000);
+  test("server should return status code of 200 and link to log in with google --> given'/login'", async () => {
+    const response = await request(app).get("/login");
+    expect(response.text).toBe("<a href='/auth/google'>click to here to Login</a>")
 
     expect(response.status).toBe(200);
   }, 20000);
