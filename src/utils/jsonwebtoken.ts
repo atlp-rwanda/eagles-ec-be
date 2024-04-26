@@ -22,4 +22,8 @@ export const decodeToken = async (token: string) => {
     const decoded = await verify(token, `${env.jwt_secret}`);
     return decoded;
 }
+export const decodeToken = async (token: string) => {
+    const decoded = await verify(token, `${env.jwt_secret}`);
+    return decoded;
+}
 
