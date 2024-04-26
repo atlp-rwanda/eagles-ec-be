@@ -6,6 +6,9 @@ import { loggedInUser} from "../services/user.service";
 import { createUserService, getUserByEmail, updateUserPassword } from "../services/user.service";
 import { hashedPassword } from "../utils/hashPassword";
 
+import User from "../sequelize/models/users";
+import { Role } from "../sequelize/models/roles";
+
 export const fetchAllUsers = async (req: Request, res: Response) => {
   try {
     // const users = await userService.getAllUsers();
@@ -112,3 +115,31 @@ export const updatePassword = async (req: Request, res: Response) => {
     })
   }
 }
+
+export const updateUserRole = async (req: Request, res: Response) => {
+  const { userId, role } = req.body;
+
+  try {
+    // Find the user to update
+    const userToUpdate = await User.findByPk(userId);
+
+    if (!userToUpdate) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    // Find the role
+    const newRole = await Role.findOne({ where: { name: role } });
+
+    if (!newRole) {
+      return res.status(400).json({ message: 'Role not found' });
+    }
+
+    // Update the user's role
+    userToUpdate.role = newRole.name;
+    await userToUpdate.save();
+
+    res.json(userToUpdate);
+  } catch (error: any) {
+    res.status(500).json({ message: 'Internal server error', error: error.message });
+  }
+};

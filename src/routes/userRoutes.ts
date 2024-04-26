@@ -5,13 +5,13 @@ import {
     userLogin,
     updatePassword}
 from "../controllers/userControllers";
-import { 
-    emailValidation,
-    validateSchema,
- } from "../middleware/validator";
+import {     emailValidation, validateSchema,} from "../middleware/validator";
 import signUpSchema from "../schemas/signUpSchema";
 import { isLoggedIn } from "../middlewares/isLoggedIn";
 import { passwordUpdateSchema } from "../schemas/passwordUpdate";
+import  {updateUserRole} from "../controllers/userControllers";
+
+import { isAdmin } from "../middlewares/isAdmin";
 
 const userRoutes = Router();
 
@@ -24,5 +24,7 @@ userRoutes.post("/register",
 )
 userRoutes.put("/passwordupdate", isLoggedIn, validateSchema(passwordUpdateSchema), updatePassword)
 
+userRoutes.post("/register", createUserController)
+userRoutes.patch("/:id/role", isLoggedIn, isAdmin, updateUserRole)
 
 export default userRoutes;

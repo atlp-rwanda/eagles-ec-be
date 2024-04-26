@@ -1,14 +1,15 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../../config/dbConnection";
 
-export interface UserAttributes {
-  id?: number;
-  name: string;
-  username: string;
-  email: string;
-  password: string;
-  createdAt?: Date;
-  updatedAt?: Date;
+export interface UserAttributes{
+  id?:number,
+  name: string,
+  username: string,
+  email:string,
+  password:string,
+  role?: string;
+  createdAt?:Date,
+  updatedAt?:Date
 }
 
 class User extends Model<UserAttributes> implements UserAttributes {
@@ -17,6 +18,7 @@ class User extends Model<UserAttributes> implements UserAttributes {
   username!: string;
   email!: string;
   password!: string;
+  role!: string;
   createdAt!: Date | undefined;
   updatedAt1: Date | undefined;
 }
@@ -44,6 +46,11 @@ User.init(
     password: {
       allowNull: false,
       type: DataTypes.STRING,
+    },
+    role:{
+      allowNull:false,
+      type:DataTypes.STRING,
+      defaultValue: 'user'
     },
     createdAt: {
       allowNull: false,
