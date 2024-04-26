@@ -8,4 +8,8 @@ export const generateToken = async(user:IUser) =>{
     );
     return accessToken;
 }
+export const decodeToken = async (token: string) => {
+    const decoded = await verify(token, `${env.jwt_secret}`);
+    return decoded;
+}
 

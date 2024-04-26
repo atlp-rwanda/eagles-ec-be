@@ -7,6 +7,7 @@ export interface UserAttributes{
   username: string,
   email:string,
   password:string,
+  role?: string;
   createdAt?:Date,
   updatedAt?:Date
 }
@@ -17,6 +18,7 @@ class User extends Model<UserAttributes> implements UserAttributes{
   username!: string;
   email!: string;
   password!: string;
+  role!: string;
   createdAt!: Date | undefined;
   updatedAt1: Date | undefined;
 }
@@ -43,6 +45,11 @@ class User extends Model<UserAttributes> implements UserAttributes{
     password: {
       allowNull:false,
       type:DataTypes.STRING
+    },
+    role:{
+      allowNull:false,
+      type:DataTypes.STRING,
+      defaultValue: 'user'
     },
     createdAt: {
       allowNull: false,
