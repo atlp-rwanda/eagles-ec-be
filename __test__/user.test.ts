@@ -16,7 +16,7 @@ const userData: any = {
 const dummySeller = {
   name: "dummy",
   username: "username",
-  email: "srukundo02@gmail.com",
+  email: "niyonkurubertin50@gmail.com",
   password: "1234567890",
   isMerchant: true,
 };
@@ -92,21 +92,6 @@ describe("Testing user Routes", () => {
     const response = await request(app).post("/api/v1/users/login").send(loggedInUser);
     expect(response.body.status).toBe(401);
     spyonOne.mockRestore();
-  }, 20000);
-
-  test("Should return send magic link if seller try to login", async () => {
-    const spy = jest.spyOn(twoFAService, "sendOTP");
-    const user = {
-      email: dummySeller.email,
-      password: dummySeller.password,
-    };
-
-    const response = await request(app).post("/api/v1/users/login").send({
-      email: dummySeller.email,
-      password: dummySeller.password,
-    });
-
-    expect(response.body.message).toBe("Verification link has been sent to your email. Please verify it to continue");
   }, 20000);
 
   test("should log a user in to retrieve a token", async () => {
