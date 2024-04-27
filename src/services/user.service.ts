@@ -1,4 +1,5 @@
 import User from "../sequelize/models/users";
+import { Role } from "../sequelize/models/roles";
 import { hashedPassword } from "../utils/hashPassword";
 import { Op } from "sequelize";
 
@@ -61,3 +62,28 @@ export const updateUserPassword = async (user: User, password: string) => {
     const update = await user.save;
     return update;
 }
+
+
+export const updateUserRoleService = async (userId: number, newRole: string): Promise<User | null> => {
+  try {
+    const user = await User.findByPk(userId);
+
+    if (!user) {
+      throw new Error('User not found');
+    }
+    const roleExist = await Role.findOne({ where: { name: newRole } });
+    
+    if (!roleExist) {
+      throw new Error(`New Role "${newRole}" is not found`);
+    }
+    else{
+      user.role = newRole;
+    }
+
+    await user.save();
+
+    return user;
+  } catch (error: any) {
+    throw new Error(error.message);
+  }
+};

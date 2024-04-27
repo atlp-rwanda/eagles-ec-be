@@ -50,7 +50,7 @@ User.init(
     role:{
       allowNull:false,
       type:DataTypes.STRING,
-      defaultValue: 'user'
+      defaultValue: 'admin'
     },
     createdAt: {
       allowNull: false,

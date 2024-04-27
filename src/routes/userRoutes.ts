@@ -5,6 +5,7 @@ import {
     userLogin,
     updatePassword}
 from "../controllers/userControllers";
+import { roleUpdateSchema } from "../schemas/roleUpdateSchema";
 import {     emailValidation, validateSchema,} from "../middleware/validator";
 import signUpSchema from "../schemas/signUpSchema";
 import { isLoggedIn } from "../middlewares/isLoggedIn";
@@ -25,6 +26,6 @@ userRoutes.post("/register",
 userRoutes.put("/passwordupdate", isLoggedIn, validateSchema(passwordUpdateSchema), updatePassword)
 
 userRoutes.post("/register", createUserController)
-userRoutes.patch("/:id/role", isLoggedIn, isAdmin, updateUserRole)
+userRoutes.patch("/:id/role", isLoggedIn, isAdmin, validateSchema(roleUpdateSchema), updateUserRole)
 
 export default userRoutes;

@@ -13,7 +13,10 @@ export const roleController = {
     }
 
     const role = await roleService.createRole({ name, permissions });
-    res.status(201).json(role);
+    res.status(201).json({
+      message: 'Role created successfully',
+      role: role
+    });
   },
 
   getRoles: async (req: Request, res: Response) => {
@@ -35,7 +38,10 @@ export const roleController = {
     if (!updatedRole) {
       return res.status(404).json({ message: 'Role not found' });
     }
-    res.status(200).json(updatedRole);
+    res.status(200).json({
+      message: 'Role updated successfully',
+      updatedRole: updatedRole
+    });
   },
 
   deleteRole: async (req: Request, res: Response) => {
@@ -44,6 +50,9 @@ export const roleController = {
     if (!deleted) {
       return res.status(404).json({ message: 'Role not found' });
     }
-    res.status(204).json({ message: 'Role deleted successfully' });
+    res.status(200).json({ 
+      status: 200,
+      message: 'Role deleted successfully'
+     });
   }
 };

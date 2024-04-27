@@ -104,6 +104,50 @@ export const loginAsUser = {
         }
     };
 
+export const updateUserRole = {
+  tags: ["Users"],
+  security: [{ bearerAuth: [] }],
+  summary: "Update User Role",
+  parameters: [
+    {
+      name: "id",
+      in: "path",
+      required: true,
+      description: "User ID",
+      schema: {
+        type: "number",
+      },
+    },
+  ],
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          properties: {
+            role: {
+              type: "string",
+            },
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "OK",
+    },
+    400: {
+      description: "Bad Request",
+    },
+    500:{
+      description: "Internal Server Error"
+    }
+  },
+
+};
+
 export const passwordUpdate = {
   tags: ["Users"],
   security: [{ bearerAuth: [] }],
