@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 /* eslint-disable @typescript-eslint/no-unused-vars */
+=======
+>>>>>>> 3072b30 (chore: Project Setup with TypeScript, PostgreSQL, and Sequelize)
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   up: (queryInterface, Sequelize) => {
