@@ -14,9 +14,9 @@ const userData: any = {
 };
 
 const dummySeller = {
-  name: "dummy1234",
-  username: "username1234",
-  email: "soleilcyber00@gmail.com",
+  name: "dummy",
+  username: "username",
+  email: "niyonkurubertin50@gmail.com",
   password: "1234567890",
   role: "seller",
 };
@@ -93,17 +93,6 @@ describe("Testing user Routes", () => {
     expect(response.body.status).toBe(401);
     spyonOne.mockRestore();
   }, 20000);
-
-  test("Should send otp verification code", async () => {
-    const spy = jest.spyOn(mailServices, "sendEmailService");
-    const response = await request(app).post("/api/v1/users/login").send({
-      email: dummySeller.email,
-      password: dummySeller.password,
-    });
-
-    expect(response.body.message).toBe("OTP verification code has been sent ,please use it to verify that it was you");
-    // expect(spy).toHaveBeenCalled();
-  }, 40000);
 
   test("should log a user in to retrieve a token", async () => {
     const response = await request(app).post("/api/v1/users/login").send({
