@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 // import { DataTypes } from "sequelize";
 // import sequelize from "../../config/dbConnection";
 
@@ -25,7 +24,6 @@
 // });
 
 // export default User;
-=======
 import { DataTypes } from "sequelize";
 import sequelize from "../../config/dbConnection";
 
@@ -52,4 +50,3 @@ const User = sequelize.define("User", {
 });
 
 export default User;
->>>>>>> 3072b30 (chore: Project Setup with TypeScript, PostgreSQL, and Sequelize)
