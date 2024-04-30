@@ -5,7 +5,9 @@ import { Op } from "sequelize";
 
 export const getAllUsers = async () => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      attributes: ['id', 'name', 'username', 'email', 'roleId', 'createdAt', 'updatedAt'],
+    });
     if (users.length === 0) {
       console.log("no user");
     }
@@ -64,26 +66,26 @@ export const updateUserPassword = async (user: User, password: string) => {
 }
 
 
-export const updateUserRoleService = async (userId: number, newRole: string): Promise<User | null> => {
-  try {
-    const user = await User.findByPk(userId);
-
-    if (!user) {
-      throw new Error('User not found');
+export const updateUserRoleService = async (userId: number, newRoleId: number): Promise<User | null> => {
+  try{
+    // check if the role exists
+    const role = await Role.findOne({where: {id: newRoleId}})
+    if (!role){
+      throw new Error(`Role with id: ${newRoleId} not found`);
     }
-    const roleExist = await Role.findOne({ where: { name: newRole } });
-    
-    if (!roleExist) {
-      throw new Error(`New Role "${newRole}" is not found`);
-    }
-    else{
-      user.role = newRole;
+    // update the role of the user 
+    const [numberOfAffectedRows, updatedUser] = await User.update(
+      {roleId: newRoleId}, 
+      {where:{
+      id: userId
+    }, returning: true});
+    if (numberOfAffectedRows === 0){
+      throw new Error(`User with id: ${userId} not found`)
     }
 
-    await user.save();
-
-    return user;
-  } catch (error: any) {
-    throw new Error(error.message);
+    return updatedUser[0];
+  }
+  catch(error: any){
+    throw new Error(`Error in service ${error.message}`);
   }
 };

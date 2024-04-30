@@ -1,10 +1,12 @@
 import { Request, Response, NextFunction } from 'express';
+import {Role} from '../sequelize/models/roles';
 
-export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
+export const isAdmin = async (req: Request, res: Response, next: NextFunction) => {
     // @ts-ignore
-    if (req.user.role !== 'admin') {
+    const roleId  = req.user.roleId;
+    const role = await Role.findByPk(roleId);
+    if (role?.name !== 'admin') {
       return res.status(403).json({ message: 'Only admins can perform this action' });
     }
-  
     next();
   };

@@ -2,7 +2,7 @@ import express from 'express';
 import { roleController } from '../controllers/rolesController';
 import { isLoggedIn } from '../middlewares/isLoggedIn';
 import{isAdmin} from '../middlewares/isAdmin';
-import { validateSchema } from '../middleware/validator';
+import { validateSchema } from '../middlewares/validator';
 import {roleSchema} from '../schemas/roleSchema';
 
 const RoleRouter = express.Router();

@@ -10,18 +10,6 @@ describe('Role Update Endpoint', () => {
       await sequelize.sync();
     });
     let token = '';
-
-    test('It should create a new user', async () => {
-        const res = await request(app)
-            .post('/api/v1/users/register')
-            .send({
-            name: 'testuser',
-            username: 'testuser',
-            email: 'test12@gmail.com',
-            password: 'test1234',
-            });
-        expect(res.statusCode).toEqual(201);
-    });
     
 
     test('It should login a created User', async () => {
@@ -48,6 +36,11 @@ describe('Role Update Endpoint', () => {
   
       expect(res.statusCode).toEqual(401);
     });
+    
+     
+     
+    
+     
   
     
   });

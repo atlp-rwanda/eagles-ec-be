@@ -2,6 +2,6 @@ import Joi from "joi";
 
 
 export const roleUpdateSchema = Joi.object({
-    role: Joi.string().min(3).max(20).required()
+    roleId: Joi.number().required()
     }).options({ allowUnknown: false
 })

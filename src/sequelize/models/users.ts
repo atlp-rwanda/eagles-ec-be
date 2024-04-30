@@ -1,5 +1,6 @@
 import { Model, DataTypes } from "sequelize";
 import sequelize from "../../config/dbConnection";
+import { Role }from "./roles";
 
 export interface UserAttributes{
   id?:number,
@@ -7,10 +8,11 @@ export interface UserAttributes{
   username: string,
   email:string,
   password:string,
-  role?: string;
+  roleId?: number;
   createdAt?:Date,
   updatedAt?:Date
 }
+
 
 class User extends Model<UserAttributes> implements UserAttributes {
   id!: number | undefined;
@@ -18,7 +20,7 @@ class User extends Model<UserAttributes> implements UserAttributes {
   username!: string;
   email!: string;
   password!: string;
-  role!: string;
+  roleId!: number | undefined;
   createdAt!: Date | undefined;
   updatedAt1: Date | undefined;
 }
@@ -47,10 +49,14 @@ User.init(
       allowNull: false,
       type: DataTypes.STRING,
     },
-    role:{
+    roleId:{
       allowNull:false,
-      type:DataTypes.STRING,
-      defaultValue: 'admin'
+      type:DataTypes.NUMBER,
+      defaultValue: 1, // default value for roleId is 7
+      references:{
+        model:"Roles",
+        key:"id"
+      }
     },
     createdAt: {
       allowNull: false,
@@ -67,4 +73,9 @@ User.init(
   },
 );
 
+
+// associations involved in the Role and User  tables
+
+User.belongsTo(Role, {foreignKey: 'roleId', as: 'userRole'})
+Role.hasMany(User, {foreignKey: 'roleId', as: 'users'})
 export default User;

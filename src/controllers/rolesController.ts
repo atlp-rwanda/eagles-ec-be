@@ -20,6 +20,7 @@ export const roleController = {
   },
 
   getRoles: async (req: Request, res: Response) => {
+   
     const roles = await roleService.getRoles();
     if (roles.length === 0) {
       return res.status(404).json({ message: 'No roles found' });
@@ -33,6 +34,11 @@ export const roleController = {
 
   updateRole: async (req: Request, res: Response) => {
     const { id } = req.params;
+    const {name} = req.body
+    const existingRole = await roleService.findRoleByName(name);
+    if (existingRole) {
+      return res.status(400).json({ message: 'Role already exists' });
+    }
     const updatedRoleData: Optional<IRole, "id"> = req.body;
     const updatedRole = await roleService.updateRole(Number(id), updatedRoleData);
     if (!updatedRole) {

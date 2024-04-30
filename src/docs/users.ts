@@ -126,8 +126,8 @@ export const updateUserRole = {
         schema: {
           type: "object",
           properties: {
-            role: {
-              type: "string",
+            roleId: {
+              type: "number",
             },
           },
         },

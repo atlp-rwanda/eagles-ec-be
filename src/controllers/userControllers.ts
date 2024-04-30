@@ -118,12 +118,12 @@ export const updatePassword = async (req: Request, res: Response) => {
 }
 
 export const updateUserRole = async (req: Request, res: Response) => {
-  const { role } = req.body;
+  const { roleId } = req.body;
   const userId = parseInt(req.params.id);
   
   try {
     
-    const userToUpdate = await updateUserRoleService(userId, role);
+    const userToUpdate = await updateUserRoleService(userId, roleId);
 
     res.status(200).json({
       message: 'User role updated successfully',
