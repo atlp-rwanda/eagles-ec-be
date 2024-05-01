@@ -15,12 +15,26 @@ const userData: any = {
   email: "test15@gmail.com",
   password: "test12345",
 };
-const dummyAdmin ={
-  email: "dummyAdmin@example.com",
-  password: "password"
-}
 
-
+const testRole =
+        [
+          {
+            
+            name: "buyer",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            name: "seller",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            name: "admin",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          }
+        ];
 
 const dummySeller = {
   name: "dummy1234",
@@ -44,7 +58,19 @@ describe("Testing user Routes", () => {
   beforeAll(async () => {
     try {
       await connect();
+
+      const testAdmin ={
+        name: "testAdmin",
+        username: "testAdmin",
+        email: "testAdmin@example.com",
+        password: await bcrypt.hash("password", 10),
+        roleId: 3
+      }
+
+      await Role.bulkCreate(testRole)
+      await  User.create(testAdmin)
       const dummy = await request(app).post("/api/v1/users/register").send(dummySeller);
+
     } catch (error) {
       throw error;
       sequelize.close();
@@ -69,39 +95,6 @@ describe("Testing user Routes", () => {
       expect(response.status).toBe(201);
     }, 20000);
 
-    test("should create test Admin and test roles", async()=>{
-      const testRole =
-        [
-          {
-            
-            name: "buyer",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            name: "seller",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          },
-          {
-            name: "admin",
-            createdAt: new Date(),
-            updatedAt: new Date(),
-          }
-        ];
-
-        let testRoles = await Role.bulkCreate(testRole)
-      
-      const testAdmin ={
-        name: "testAdmin",
-        username: "testAdmin",
-        email: "testAdmin@example.com",
-        password: await bcrypt.hash("password", 10),
-        roleId: 3
-      }
-      let testAd = await  User.create(testAdmin)
-      
-    })
 
     test("should login a dummyadmin", async() =>{
       const response = await request(app).post("/api/v1/users/login").send({
