@@ -102,7 +102,9 @@ export const loginAsUser = {
     content: {
       "application/json": {
         schema: {
+
           $ref: "#/components/schemas/loginSchema",
+
         },
       },
     },
@@ -125,6 +127,7 @@ export const loginAsUser = {
     },
   },
 };
+
 
 export const updateUserRole = {
   tags: ["Users"],
@@ -169,6 +172,7 @@ export const updateUserRole = {
   },
 
 };
+
 
 export const passwordUpdate = {
   tags: ["Users"],

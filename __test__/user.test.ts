@@ -197,6 +197,7 @@ describe("Testing user Routes", () => {
     expect(response.body.status).toBe(401);
     spyonOne.mockRestore();
   }, 20000);
+
   test("should login a dummy seller", async()=>{
     const response  = await request(app).post("/api/v1/users/login").send({
       email: dummySeller.email,
@@ -218,6 +219,7 @@ describe("Testing user Routes", () => {
     expect(response.status).toBe(200)
   })
 
+
   test("Should send otp verification code", async () => {
     const spy = jest.spyOn(mailServices, "sendEmailService");
     const response = await request(app).post("/api/v1/users/login").send({
@@ -228,9 +230,6 @@ describe("Testing user Routes", () => {
     expect(response.body.message).toBe("OTP verification code has been sent ,please use it to verify that it was you");
     // expect(spy).toHaveBeenCalled();
   }, 40000);
-  
-
- 
 
   test("should log a user in to retrieve a token", async () => {
     const response = await request(app).post("/api/v1/users/login").send({
@@ -320,7 +319,3 @@ describe("Testing user authentication", () => {
     expect(response.status).toBe(302); 
   });
   
-});
-
-
-

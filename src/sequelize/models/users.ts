@@ -2,6 +2,7 @@ import { Model, DataTypes } from "sequelize";
 import sequelize from "../../config/dbConnection";
 import { Role }from "./roles";
 
+
 export interface UserAttributes{
   id?:number,
   name: string,
@@ -11,6 +12,7 @@ export interface UserAttributes{
   roleId?: number;
   createdAt?:Date,
   updatedAt?:Date
+
 }
 class User extends Model<UserAttributes> implements UserAttributes {
   id!: number | undefined;

@@ -1,8 +1,7 @@
 import express from "express";
 import { serve, setup } from "swagger-ui-express";
 import { env } from "../utils/env";
-
-  import {
+import {
     RoleSchema,
     getRoles,
     createRole,
@@ -10,6 +9,7 @@ import { env } from "../utils/env";
     deleteRole
   } from "./role";
 import { createUsers, getUsers, loginAsUser,updateUserRole, userSchema, loginSchema, updatePasswordSchema, passwordUpdate, verifyOTPToken } from "./users";
+
 
 const docRouter = express.Router();
 
@@ -68,6 +68,7 @@ const options = {
     "/api/v1/roles/{id}": {
       patch: updateRole,
       delete: deleteRole
+
     },
     "/api/v1/users/2fa-verify": {
       post: verifyOTPToken,
@@ -84,6 +85,7 @@ const options = {
       Login: loginSchema,
       updatePassword: updatePasswordSchema,
       RoleSchema: RoleSchema
+
     },
     securitySchemes: {
       bearerAuth: {

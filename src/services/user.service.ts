@@ -40,12 +40,15 @@ export const loggedInUser = async (email: string) => {
     throw new Error(err.message);
   }
 };
+
 export const createUserService = async (name: string, email: string, username: string, password: string): Promise<User | null> => {
+
   const existingUser = await User.findOne({ where: { email } });
   if (existingUser) {
     return null;
   }
   const hashPassword = await hashedPassword(password);
+
   
   const  user = await User.create({
       name,
@@ -55,6 +58,7 @@ export const createUserService = async (name: string, email: string, username: s
     });
     return user;
   
+
 };
 
 export const getUserByEmail = async (email: string): Promise<User | null> => {
@@ -110,5 +114,5 @@ export const updateUserRoleService = async (userId: number, newRoleId: number): 
   catch(error: any){
     throw new Error(`Error in service ${error.message}`);
   }
-  
+ 
 };

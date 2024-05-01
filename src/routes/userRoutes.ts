@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import { 
     fetchAllUsers, 
     createUserController,
@@ -16,6 +17,7 @@ import { isLoggedIn } from "../middlewares/isLoggedIn";
 import { passwordUpdateSchema } from "../schemas/passwordUpdate";
 import  {updateUserRole} from "../controllers/userControllers";
 import { isAdmin } from "../middlewares/isAdmin";
+
 import { isTokenFound } from "../middlewares/isTokenFound";
 import { authenticateUser, callbackFn } from "../services/user.service";
 require("../auth/auth");
@@ -24,6 +26,7 @@ import logInSchema from "../schemas/loginSchema";
 const userRoutes = Router();
 
 userRoutes.get("/", fetchAllUsers);
+
 userRoutes.post('/login',userLogin);
 userRoutes.post("/register", 
  
@@ -31,6 +34,7 @@ userRoutes.post("/register",
  validateSchema(signUpSchema), 
  createUserController
 )
+
 userRoutes.put("/passwordupdate", isLoggedIn, validateSchema(passwordUpdateSchema), updatePassword)
 userRoutes.post("/login", emailValidation,validateSchema(logInSchema),userLogin);
 userRoutes.post("/register", emailValidation, validateSchema(signUpSchema), createUserController);
