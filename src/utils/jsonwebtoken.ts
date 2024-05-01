@@ -27,6 +27,7 @@ export const generateMagicLinkToken = async (user: IUser) => {
   return token;
 };
 
+
 export const verifyMagicLinkToken = async (token: string) => {
   try {
     const decoded = verify(token, `${env.jwt_secret}`);

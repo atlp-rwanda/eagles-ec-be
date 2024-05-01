@@ -6,12 +6,14 @@ import { IUser, STATUS, SUBJECTS } from "../types";
 import { comparePasswords } from "../utils/comparePassword";
 import { createUserService, getUserByEmail, updateUserPassword,loggedInUser } from "../services/user.service";
 import { hashedPassword } from "../utils/hashPassword";
+
 import { updateUserRoleService } from "../services/user.service";
 import { isSeller } from "../utils/isSeller";
 
 import User from "../sequelize/models/users";
 import { Role } from "../sequelize/models/roles";
 import Token, { TokenAttributes } from "../sequelize/models/Token";
+
 import { verifyOtpTemplate } from "../email-templates/verifyotp";
 
 export const fetchAllUsers = async (req: Request, res: Response) => {
@@ -55,6 +57,7 @@ export const userLogin = async (req: Request, res: Response) => {
         message: " User email or password is incorrect!",
       });
     } else {
+
       // @ts-ignore
       if (user.userRole.name === "seller") {
         const token = Math.floor(Math.random() * 90000 + 10000);
@@ -66,7 +69,7 @@ export const userLogin = async (req: Request, res: Response) => {
           message: "OTP verification code has been sent ,please use it to verify that it was you",
         });
       } else {
-        // delete user.password;
+
         const userInfo = {
           
           id: user.id,
@@ -79,6 +82,7 @@ export const userLogin = async (req: Request, res: Response) => {
           status: 200,
           message: "Logged in",
           user: userInfo,
+
           token: accessToken,
         });
       }
@@ -88,8 +92,10 @@ export const userLogin = async (req: Request, res: Response) => {
 
 export const createUserController = async (req: Request, res: Response) => {
   try {
+
     const { name, email, username, password } = req.body;
     const user = await createUserService(name, email, username, password);
+
     if (!user || user == null) {
       return res.status(409).json({
         status: 409,
@@ -138,6 +144,7 @@ export const updatePassword = async (req: Request, res: Response) => {
       message: err.message,
     });
   }
+
 }
 
 export const updateUserRole = async (req: Request, res: Response) => {
@@ -148,18 +155,15 @@ export const updateUserRole = async (req: Request, res: Response) => {
     
     const userToUpdate = await updateUserRoleService(userId, roleId);
     
-
     res.status(200).json({
       message: 'User role updated successfully',
-    }
-    );
-    
-    
-    
-  } catch (error: any) {
+    });   
+  } 
+  catch (error: any) {
     res.status(500).json({ message: 'Internal server error', error: error.message });
   }
 };
+
 
 
 export const tokenVerification = async (req: any, res: Response) => {
@@ -177,6 +181,7 @@ export const tokenVerification = async (req: any, res: Response) => {
       });
     }
 // @ts-ignore
+
     const user: IUser | null = await User.findOne({ where: { id: foundToken.userId } });
 
     if (user) {
@@ -200,6 +205,7 @@ export const tokenVerification = async (req: any, res: Response) => {
     });
   }
 };
+
 export const handleSuccess = async (req: Request, res: Response) => {
   // @ts-ignore
   const user: UserProfile = req.user;
