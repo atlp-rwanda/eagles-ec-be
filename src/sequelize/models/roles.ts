@@ -23,8 +23,9 @@ class Role extends Model {
 
 Role.init({
   id: {
-    type: DataTypes.INTEGER.UNSIGNED,
+    type: DataTypes.NUMBER,
     autoIncrement: true,
+    allowNull: false,
     primaryKey: true,
   },
   name: {

@@ -12,8 +12,6 @@ export interface UserAttributes{
   createdAt?:Date,
   updatedAt?:Date
 }
-
-
 class User extends Model<UserAttributes> implements UserAttributes {
   id!: number | undefined;
   name!: string;
@@ -46,13 +44,13 @@ User.init(
       type: DataTypes.STRING,
     },
     password: {
-      allowNull: false,
+      allowNull: true,
       type: DataTypes.STRING,
     },
     roleId:{
       allowNull:false,
       type:DataTypes.NUMBER,
-      defaultValue: 1, // default value for roleId is 7
+      defaultValue: 1, // default value for roleId is 1
       references:{
         model:"Roles",
         key:"id"
@@ -72,7 +70,6 @@ User.init(
     modelName: "users",
   },
 );
-
 
 // associations involved in the Role and User  tables
 

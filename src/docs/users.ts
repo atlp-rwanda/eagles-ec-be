@@ -28,9 +28,9 @@ export const updatePasswordSchema = {
     },
     confirmPassword: {
       type: "string",
-    }
-  }
-}
+    },
+  },
+};
 
 export const loginSchema = {
   properties: {
@@ -97,12 +97,34 @@ export const createUsers = {
 export const loginAsUser = {
   tags: ["Users"],
   summary: "Login as user",
-        responses: {
-          200: {
-            description: "OK",
-          }
-        }
-    };
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          $ref: "#/components/schemas/loginSchema",
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "OK",
+    },
+    400: {
+      description: "Bad request missing or extra filed",
+    },
+    404: {
+      description: "Account not found",
+    },
+    409: {
+      description: "Invalid credentials",
+    },
+    500: {
+      description: "Internal server error",
+    },
+  },
+};
 
 export const updateUserRole = {
   tags: ["Users"],
@@ -157,18 +179,46 @@ export const passwordUpdate = {
     content: {
       "application/json": {
         schema: {
-          $ref: "#/components/schemas/updatePassword"
-        }
-      }
-    }
+          $ref: "#/components/schemas/updatePassword",
+        },
+      },
+    },
   },
   responses: {
     200: {
       description: "OK",
     },
     400: {
-      description: "Bad Request"
-    }
-  }
-}
-  
+      description: "Bad Request",
+    },
+  },
+};
+export const verifyOTPToken = {
+  tags: ["Users"],
+  summary: "verify OTP token for seller during login process",
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          properties: {
+            token: {
+              type: "number",
+            },
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Successfuly logged in ",
+    },
+    403: {
+      description: "forbidden token expired",
+    },
+    404: {
+      description: "Inavalid token or not found",
+    },
+  },
+};

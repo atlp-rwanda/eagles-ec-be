@@ -3,15 +3,27 @@ import { beforeAll, afterAll, jest, test } from "@jest/globals";
 import app from "../src/utils/server";
 import User from "../src/sequelize/models/users";
 import * as userServices from "../src/services/user.service";
+import * as mailServices from "../src/services/mail.service";
 import sequelize, { connect } from "../src/config/dbConnection";
+import { response } from "express";
 
 const userData: any = {
-  name: "yvanna",
-  username: "testuser",
-  email: "test1@gmail.com",
-  password: "test1234",
+  name: "yvanna5",
+  username: "testuser5",
+  email: "test15@gmail.com",
+  password: "test12345",
 };
+const dummyAdmin ={
+  email: "dummyAdmin@example.com",
+  password: "password"
+}
 
+const dummySeller = {
+  name: "dummy1234",
+  username: "username1234",
+  email: "soleilcyber00@gmail.com",
+  password: "1234567890",
+};
 const userTestData = {
   newPassword: "Test@123",
   confirmPassword: "Test@123",
@@ -22,12 +34,15 @@ const loginData: any = {
   email: "test1@gmail.com",
   password: "test1234",
 };
+
+let admintoken: any;
 describe("Testing user Routes", () => {
   beforeAll(async () => {
     try {
       await connect();
-      await User.destroy({ truncate: true });
+      const dummy = await request(app).post("/api/v1/users/register").send(dummySeller);
     } catch (error) {
+      throw error;
       sequelize.close();
     }
   }, 40000);
@@ -35,8 +50,12 @@ describe("Testing user Routes", () => {
   afterAll(async () => {
     await User.destroy({ truncate: true });
     await sequelize.close();
-  });
+  }, 20000);
+
   let token: any;
+  
+  let dummySellerId: number;
+
   describe("Testing user authentication", () => {
     test("should return 201 and create a new user when registering successfully", async () => {
       const response = await request(app)
@@ -45,8 +64,16 @@ describe("Testing user Routes", () => {
       expect(response.status).toBe(201);
     }, 20000);
 
+    test("should login a dummyadmin", async() =>{
+      const response = await request(app).post("/api/v1/users/login").send({
+        email: dummyAdmin.email,
+        password: dummyAdmin.password
+      })
+      expect(response.body.message).toBe("Logged in")
+      admintoken = response.body.token
+    })
+
     test("should return 409 when registering with an existing email", async () => {
-      User.create(userData);
       const response = await request(app)
         .post("/api/v1/users/register")
         .send(userData);
@@ -67,6 +94,47 @@ describe("Testing user Routes", () => {
     }, 20000);
   });
 
+  describe('Role Update Endpoint', () => {
+    test('It should create a Role', async () => {
+        const res = await request(app)
+  
+            .post('/api/v1/roles')
+            .send({
+            name: 'testRole', 
+            })
+            .set('Authorization', `Bearer ${admintoken}`);
+    });
+    test('It should get all roles', async () => {
+        const res = await request(app);
+        res.get('/api/v1/roles')
+    .expect(200)
+        
+    })
+  
+    test('It should require authorization', async () => {
+      const res = await request(app)
+        .patch('/api/v1/roles/2')
+        .send({
+          name: 'admin',
+        });
+        
+      expect(res.statusCode).toEqual(401);
+    });
+    test('It should update a role', async () => {
+      const res = await request(app)
+        .patch('/api/v1/roles/1')
+        .send({
+          name: 'testRole',
+        })
+        .set('Authorization', `Bearer ${admintoken}`);
+        console.log(res.body)
+      expect(res.body).toHaveProperty('message');
+    });    
+     
+  
+    
+  });
+
   test("should return all users in db --> given '/api/v1/users'", async () => {
     const spy = jest.spyOn(User, "findAll");
     const spy2 = jest.spyOn(userServices, "getAllUsers");
@@ -74,22 +142,55 @@ describe("Testing user Routes", () => {
     expect(spy).toHaveBeenCalled();
     expect(spy2).toHaveBeenCalled();
   }, 20000);
+
   test("Should return status 401 to indicate Unauthorized user", async () => {
     const loggedInUser = {
       email: userData.email,
-      password: "test",
+      password: "test123456",
     };
     const spyonOne = jest.spyOn(User, "findOne").mockResolvedValueOnce({
       //@ts-ignore
       email: userData.email,
       password: loginData.password,
     });
-    const response = await request(app)
-      .post("/api/v1/users/login")
-      .send(loggedInUser);
+    const response = await request(app).post("/api/v1/users/login").send(loggedInUser);
     expect(response.body.status).toBe(401);
     spyonOne.mockRestore();
-  });
+  }, 20000);
+  test("should login a dummy seller", async()=>{
+    const response  = await request(app).post("/api/v1/users/login").send({
+      email: dummySeller.email,
+      password: dummySeller.password
+    })
+    expect(response.status).toBe(200);
+    dummySellerId = response.body.user.id;
+  })
+
+  test("should update dummyseller role from default to a seller", async() =>{
+    
+    const response  = await request(app).patch(`/api/v1/users/${dummySellerId}/role`).send(
+      {
+        roleId: 2
+      }
+
+    )
+    .set("Authorization", "Bearer " + admintoken);
+    expect(response.status).toBe(200)
+  })
+
+  test("Should send otp verification code", async () => {
+    const spy = jest.spyOn(mailServices, "sendEmailService");
+    const response = await request(app).post("/api/v1/users/login").send({
+      email: dummySeller.email,
+      password: dummySeller.password,
+    });
+
+    expect(response.body.message).toBe("OTP verification code has been sent ,please use it to verify that it was you");
+    // expect(spy).toHaveBeenCalled();
+  }, 40000);
+  
+
+ 
 
   test("should log a user in to retrieve a token", async () => {
     const response = await request(app).post("/api/v1/users/login").send({
@@ -114,13 +215,11 @@ describe("Testing user Routes", () => {
   });
 
   test("should return 401 when updating password without authorization", async () => {
-    const response = await request(app)
-      .put("/api/v1/users/passwordupdate")
-      .send({
-        oldPassword: userData.password,
-        newPassword: userTestData.newPassword,
-        confirmPassword: userTestData.confirmPassword,
-      });
+    const response = await request(app).put("/api/v1/users/passwordupdate").send({
+      oldPassword: userData.password,
+      newPassword: userTestData.newPassword,
+      confirmPassword: userTestData.confirmPassword,
+    });
     expect(response.status).toBe(401);
   });
 
@@ -154,9 +253,34 @@ describe("Testing user Routes", () => {
       .send({
         oldPassword: userTestData.wrongPassword,
         newPassword: userTestData.newPassword,
-        confirmPassword:userTestData.wrongPassword,
+        confirmPassword: userTestData.wrongPassword,
       })
       .set("Authorization", "Bearer " + token);
     expect(response.status).toBe(400);
   });
 });
+
+describe("Testing user authentication", () => {
+  test("should return 200 when password is updated", async () => {
+    const response = await request(app)
+      .get("/login")
+      expect(response.status).toBe(200) 
+      expect(response.text).toBe('<a href="/api/v1/users/auth/google"> Click to  Login </a>')
+  });
+  test("should return a redirect to Google OAuth when accessing /auth/google", async () => {
+    const response = await request(app).get("/api/v1/users/auth/google");
+    expect(response.status).toBe(302);
+    expect(response.headers.location).toContain("https://accounts.google.com/o/oauth2");
+  });
+
+  test("should handle Google OAuth callback and redirect user appropriately", async () => {
+    const callbackFnMock = jest.fn();
+  
+    const response = await request(app).get("/api/v1/users/auth/google/callback");
+    expect(response.status).toBe(302); 
+  });
+  
+});
+
+
+

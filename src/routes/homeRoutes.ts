@@ -1,4 +1,5 @@
 import { Request, Response, Router } from "express";
+import Token from "../sequelize/models/Token";
 
 const homeRoute = Router();
 
@@ -13,6 +14,9 @@ homeRoute.get("/", (req: Request, res: Response) => {
       error: error.message,
     });
   }
+});
+homeRoute.get("/login", (req: Request, res: Response) => {
+  res.send('<a href="/api/v1/users/auth/google"> Click to  Login </a>')
 });
 
 export default homeRoute;
