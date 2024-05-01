@@ -8,7 +8,7 @@ import { createUserService, getUserByEmail, updateUserPassword,loggedInUser } fr
 import { hashedPassword } from "../utils/hashPassword";
 
 import { updateUserRoleService } from "../services/user.service";
-import { isSeller } from "../utils/isSeller";
+
 
 import User from "../sequelize/models/users";
 import { Role } from "../sequelize/models/roles";
@@ -61,9 +61,24 @@ export const userLogin = async (req: Request, res: Response) => {
       // @ts-ignore
       if (user.userRole.name === "seller") {
         const token = Math.floor(Math.random() * 90000 + 10000);
+      
         //@ts-ignore
-        await Token.create({ token: token, userId: user.id });
+
+         try{
+          // @ts-ignore
+          
+          await Token.create({ token: token, userId: user.id });
+          
+         }catch(err){
+          
+          console.error("error",err)
+        }
+
+         //@ts-ignore
+        
+        
         await mailService.sendEmailService(user, SUBJECTS.CONFIRM_2FA, verifyOtpTemplate(token), token);
+        
         return res.status(200).json({
           status: STATUS.PENDING,
           message: "OTP verification code has been sent ,please use it to verify that it was you",

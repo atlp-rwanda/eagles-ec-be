@@ -1,4 +1,5 @@
-import { Sequelize, DataTypes, Model } from 'sequelize';
+import {  DataTypes, Model } from 'sequelize';
+import sequelize from "../../config/dbConnection";
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -9,11 +10,6 @@ export interface IRole {
 }
 
 
-
-const sequelize = new Sequelize(process.env.DB_NAME as string, process.env.DB_USER as string, process.env.DB_PASSWORD as string, {
-  host: 'localhost',
-  dialect: 'postgres',
-});
 
 class Role extends Model {
   public id!: number;
@@ -29,16 +25,14 @@ Role.init({
     primaryKey: true,
   },
   name: {
+    unique: true,
     type: new DataTypes.STRING(128),
     allowNull: false,
   },
-  permissions: { 
-    type: new DataTypes.STRING(128),
-    allowNull: true,
-  },
+  
 }, {
   tableName: 'Roles',
-  sequelize,
+  sequelize: sequelize,
 });
 
 export { Role };

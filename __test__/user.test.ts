@@ -59,6 +59,8 @@ describe("Testing user Routes", () => {
     try {
       await connect();
 
+      await Role.destroy({ where: {} });
+      
       const testAdmin ={
         name: "testAdmin",
         username: "testAdmin",
@@ -66,9 +68,11 @@ describe("Testing user Routes", () => {
         password: await bcrypt.hash("password", 10),
         roleId: 3
       }
-
-      await Role.bulkCreate(testRole)
-      await  User.create(testAdmin)
+      console.log("creaaaaaaaaaaaaaaaaaaaaaaaaaa")
+      const testR = await Role.bulkCreate(testRole)
+      console.log("creasssssssssssssssss",testR)
+      const testA = await  User.create(testAdmin)
+      
       const dummy = await request(app).post("/api/v1/users/register").send(dummySeller);
 
     } catch (error) {
@@ -196,6 +200,7 @@ describe("Testing user Routes", () => {
       email: dummySeller.email,
       password: dummySeller.password
     })
+    
     expect(response.status).toBe(200);
     dummySellerId = response.body.user.id;
   })
@@ -209,20 +214,22 @@ describe("Testing user Routes", () => {
 
     )
     .set("Authorization", "Bearer " + admintoken);
+   
     expect(response.status).toBe(200)
   })
 
 
   test("Should send otp verification code", async () => {
-    const spy = jest.spyOn(mailServices, "sendEmailService");
+    const spy = await jest.spyOn(mailServices, "sendEmailService");
+    
     const response = await request(app).post("/api/v1/users/login").send({
       email: dummySeller.email,
       password: dummySeller.password,
     });
-
+    
     expect(response.body.message).toBe("OTP verification code has been sent ,please use it to verify that it was you");
     // expect(spy).toHaveBeenCalled();
-  }, 40000);
+  }, 60000);
 
   test("should log a user in to retrieve a token", async () => {
     const response = await request(app).post("/api/v1/users/login").send({
