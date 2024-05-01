@@ -2,6 +2,8 @@ import request from "supertest";
 import { beforeAll, afterAll, jest, test } from "@jest/globals";
 import app from "../src/utils/server";
 import User from "../src/sequelize/models/users";
+import { Role } from "../src/sequelize/models/roles";
+import bcrypt from "bcrypt"
 import * as userServices from "../src/services/user.service";
 import * as mailServices from "../src/services/mail.service";
 import sequelize, { connect } from "../src/config/dbConnection";
@@ -17,6 +19,8 @@ const dummyAdmin ={
   email: "dummyAdmin@example.com",
   password: "password"
 }
+
+
 
 const dummySeller = {
   name: "dummy1234",
@@ -56,6 +60,7 @@ describe("Testing user Routes", () => {
   
   let dummySellerId: number;
 
+
   describe("Testing user authentication", () => {
     test("should return 201 and create a new user when registering successfully", async () => {
       const response = await request(app)
@@ -64,11 +69,46 @@ describe("Testing user Routes", () => {
       expect(response.status).toBe(201);
     }, 20000);
 
+    test("should create test Admin and test roles", async()=>{
+      const testRole =
+        [
+          {
+            
+            name: "buyer",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            name: "seller",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          },
+          {
+            name: "admin",
+            createdAt: new Date(),
+            updatedAt: new Date(),
+          }
+        ];
+
+        let testRoles = await Role.bulkCreate(testRole)
+      
+      const testAdmin ={
+        name: "testAdmin",
+        username: "testAdmin",
+        email: "testAdmin@example.com",
+        password: await bcrypt.hash("password", 10),
+        roleId: 3
+      }
+      let testAd = await  User.create(testAdmin)
+      
+    })
+
     test("should login a dummyadmin", async() =>{
       const response = await request(app).post("/api/v1/users/login").send({
-        email: dummyAdmin.email,
-        password: dummyAdmin.password
+        email: "testAdmin@example.com",
+        password: "password"
       })
+      
       expect(response.body.message).toBe("Logged in")
       admintoken = response.body.token
     })
@@ -127,7 +167,7 @@ describe("Testing user Routes", () => {
           name: 'testRole',
         })
         .set('Authorization', `Bearer ${admintoken}`);
-        console.log(res.body)
+        
       expect(res.body).toHaveProperty('message');
     });    
      

@@ -13,7 +13,7 @@
     "migrate:test":"npx sequelize-cli db:migrate --env test",
     "seed": "npx sequelize-cli db:seed:all",
     "lint:fix": "npx eslint --fix .",
-    "test": "cross-env NODE_ENV=test npm run seed && jest --detectOpenHandles --coverage",
+    "test": "cross-env NODE_ENV=test jest --detectOpenHandles --coverage",
     "prepare": "husky",
     "prettier": "prettier . --write"
   },
