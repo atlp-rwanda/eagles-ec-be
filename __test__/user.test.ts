@@ -318,4 +318,5 @@ describe("Testing user authentication", () => {
     const response = await request(app).get("/api/v1/users/auth/google/callback");
     expect(response.status).toBe(302); 
   });
-  
+  }
+);
