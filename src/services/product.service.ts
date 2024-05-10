@@ -263,12 +263,19 @@ export const searchProduct = async (search: SearchQuery, req: Request, res: Resp
 }
 export const updateProductAvailability = async (req: Request, res: Response) => {
     const productId = req.params.id;
+    //@ts-ignore
+    const userId = req.user.id;
     if (!productId) {
         return res.status(400).json({ message: 'Product ID is required' });
     }
 
     try {
-        let product = await Product.findByPk(productId);
+        let product = await Product.findOne({
+          where:{
+            id:productId,
+            userId
+          }
+        });
         if (!product) {
             return res.status(404).json({ message: 'Product not found' });
         }
