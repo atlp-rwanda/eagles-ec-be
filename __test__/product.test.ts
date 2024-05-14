@@ -42,74 +42,72 @@ const product:any = {
     password: "soleil00",    
   }
 
-const searchProduct: any = {
-  name: "iphone",
-  minPrice: 0,
-  maxPrice: 0,
-  category: "Electronic device",
-};
+  const searchProduct: any = {
+    name: "iphone",
+    minPrice: 0,
+    maxPrice: 0,
+    category: "Electronic device",
+  };
 
 describe("Testing product Routes", () => {
-    beforeAll(async () => {
-      try {
-        await connect();
-        const testAdmin = {
-            name: "admin123",
-            username: "admin123",
-            email: "admin1@example.com",
-            password: await bcrypt.hash("password", 10),
-            roleId: 3
-          }
-       
-          await Role.destroy({ where: {}});
-          const resetId = await sequelize.query('ALTER SEQUENCE "Roles_id_seq" RESTART WITH 1');
-          
-          await Role.bulkCreate([
-            { name: "buyer" },
-            { name: "seller" },
-            { name: "admin" },
-          ])
-         
-          await User.create(testAdmin);
-      
-          const dummy = await request(app).post("/api/v1/users/register").send(dummySeller);
-        await Product.destroy({});
-        await Category.destroy({truncate:true});
-      } catch (error) {
-        console.log("error for products testing ", error)
-      }
-    }, 40000);
+beforeAll(async () => {
+  try {
+    await connect();
+    const testAdmin = {
+      name: "admin123",
+      username: "admin123",
+      email: "admin1@example.com",
+      password: await bcrypt.hash("password", 10),
+      roleId: 3
+    }
+    
+    await Role.destroy({ where: {}});
+    const resetId = await sequelize.query('ALTER SEQUENCE "Roles_id_seq" RESTART WITH 1');
+    
+    await Role.bulkCreate([
+      { name: "buyer" },
+      { name: "seller" },
+      { name: "admin" },
+    ])
+    
+    await User.create(testAdmin);
+    
+    const dummy = await request(app).post("/api/v1/users/register").send(dummySeller);
+    await Product.destroy({});
+    await Category.destroy({truncate:true});
+  } catch (error) {
+    console.log("error for products testing ", error)
+  }
+}, 40000);
+
+let token:any, adminToken:any;
+let buyerToken: any;
+let productId:any;
+
+
+  test("should return 201 and create a new user when registering successfully", async () => {
+    const response = await request(app)
+    .post("/api/v1/users/register")
+    .send(userData);
+    expect(response.status).toBe(201);
+  }, 20000);
   
-    afterAll(async () => {
-      await Product.destroy({where:{}});
-      await sequelize.close();
-      await redisClient.quit()
-    });
-    test("should return 201 and create a new user when registering successfully", async () => {
-      const response = await request(app)
-        .post("/api/v1/users/register")
-        .send(userData);
-      expect(response.status).toBe(201);
-    }, 20000);
-
-    test('should return 201 and register a dummy buyer user', async () => {
-      const response = await request(app)
-        .post("/api/v1/users/register")
-        .send(dummyBuyer);
-        expect(response.status).toBe(201);
-    })
-    let buyerToken: any;
-
-    test("should login an buyer", async () =>{
-      const response = await request(app).post("/api/v1/users/login").send({
-        email: "soleil@soleil0w.com",
-        password: "soleil00"
+  test('should return 201 and register a dummy buyer user', async () => {
+    const response = await request(app)
+    .post("/api/v1/users/register")
+    .send(dummyBuyer);
+    expect(response.status).toBe(201);
+  })
+  
+  test("should login an buyer", async () =>{
+    const response = await request(app).post("/api/v1/users/login").send({
+      email: "soleil@soleil0w.com",
+      password: "soleil00"
     })
     buyerToken = response.body.token;
   });
-
-    let token:any, adminToken:any;
-    test('It should return status 401 for unthorized',async() =>{
+  
+  test('It should return status 401 for unthorized',async() =>{
         const response = await request(app)
         .post('/api/v1/products')
         .send(product)
@@ -224,7 +222,6 @@ const imagePaths = [
     .set("Authorization", "Bearer " + token);
     expect(response.status).toBe(201);
 },40000);
-let productId:any;
 test("should return all products in db --> given '/api/v1/products'", async () => {
   const spy = jest.spyOn(Product, "findAll");
   const response = await request(app).get("/api/v1/products")
@@ -258,42 +255,6 @@ test("should return all products in db --> given '/api/v1/products'", async () =
     expect(response.status).toBe(201);
 },40000);
 
-test('It should add a product to the user wishes', async () => {
-  const response = await request(app)
-  .post('/api/v1/wishes')
-  .send({ productId })
-  .set("Authorization", "Bearer " + buyerToken);
-  expect(response.status).toBe(201)
-}, 20000);
-
-test('It should return a list of user wishes', async () => {
-  const response = await request(app)
-  .get('/api/v1/wishes')
-  .set("Authorization", "Bearer " + buyerToken);
-  expect(response.status).toBe(200)
-});
-
-test('It should retrieve wishes on a single product', async () => {
-  const response = await request(app)
-  .get(`/api/v1/wishes/${productId}`)
-  .set("Authorization", "Bearer " + token);
-  expect(response.status).toBe(200)
-})
-
-test('It should remove a product from user wishlist', async () => {
-  const response = await request(app)
-  .delete(`/api/v1/wishes/${productId}`)
-  .set("Authorization", "Bearer " + buyerToken);
-  expect(response.status).toBe(200)
-})
-
-  test('It should return status 200 for removed Product',async() =>{
-    const response = await request(app)
-    .delete(`/api/v1/products/${productId}`)
-    .set("Authorization", "Bearer " + token);
-    expect(response.status).toBe(200);
-  },20000);
-
   test('It should return status 404 Not found',async() =>{
     const response = await request(app)
     .get('/api/v1/products/1')
@@ -318,6 +279,7 @@ test('It should return status 200 for removed category',async() =>{
     const response = await request(app).get("/api/v1/products/search").send(searchProduct);
     expect(response.status).toBe(200);
   });
+
   test("it should return status product is not available when searching product", async () => {
     const response = await request(app)
       .get("/api/v1/products/search")
@@ -337,5 +299,57 @@ test('It should return status 200 for removed category',async() =>{
       .patch(`/api/v1/products/${91}/status`)
       .set("Authorization", "Bearer " + token);
       expect(response.body.message).toBe('Product not found')      
-  })
+  });
+
+
+  describe("Testing wishes routes", () => {
+  
+  test('It should add a product to the user wishes', async () => {
+    const response = await request(app)
+    .post('/api/v1/wishes')
+    .send({ productId })
+    .set("Authorization", "Bearer " + buyerToken);
+    expect(response.body.message).toBe("product was added to your wishlist")
+  }, 40000);
+  
+  test('It should return a list of user wishes', async () => {
+    const response = await request(app)
+    .get('/api/v1/wishes')
+    .set("Authorization", "Bearer " + buyerToken);
+    expect(response.body.message).toBe("wishes was retrieved successfully")
+  }, 20000);
+  
+  test('It should retrieve wishes on a single product', async () => {
+    const response = await request(app)
+    .get(`/api/v1/products/${productId}/wishes`)
+    .set("Authorization", "Bearer " + token);
+    expect(response.body.message).toBe("success")
+  }, 20000)
+  
+  test('It should remove a product from user wishlist', async () => {
+    const response = await request(app)
+    .delete(`/api/v1/products/${productId}/wishes`)
+    .set("Authorization", "Bearer " + buyerToken);
+    expect(response.status).toBe(200)
+  }, 20000)
+  
+    test('It should return status 200 for removed Product',async() =>{
+      const response = await request(app)
+      .delete(`/api/v1/products/${productId}`)
+      .set("Authorization", "Bearer " + token);
+      expect(response.status).toBe(200);
+    },20000);
+  
+  });
+
+
+  afterAll(async () => {
+    await Product.destroy({where:{}});
+    await sequelize.close();
+  });
+
 });
+
+
+
+

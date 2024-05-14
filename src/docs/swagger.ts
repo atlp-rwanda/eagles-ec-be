@@ -122,50 +122,53 @@ const options = {
     "/api/v1/users/{userId}/status": {
       patch: changeUserAccountStatus,
     },
-    "/api/v1/wishes": {
-      post: AddToWishes,
-      get: getWishes,
-    },
-    "/api/v1/products/{id}/status": {
-      patch: changeProductAvailability,
-    },
-    "/api/v1/wishes/{id}": {
-      get: getWishesByProduct,
-      delete: deleteWish,
-    },
-    "/api/v1/products/search": {
-      get: searchProduct,
-    },
-    "/api/v1/carts": {
-      get: viewCartDoc,
-      post: addItemToCartDoc,
-      delete: clearAllProductFromCartDoc,
-      put: removeProductFromCartDoc,
-      patch: updateProductQuantityDoc,
+  "/api/v1/wishes": {
+    post: AddToWishes,
+    get: getWishes
+  } ,
+  "/api/v1/products/{id}/status": {
+    patch: changeProductAvailability,
+  },
+  "/api/v1/messages":{
+    get:joinChats
+  },
+  "/api/v1/products/{id}/wishes": {
+    get: getWishesByProduct,
+    delete: deleteWish
+  },
+    "/api/v1/products/search" : {
+      get: searchProduct
+   },
+   "/api/v1/carts": {
+    get: viewCartDoc,
+    post: addItemToCartDoc,
+    delete: clearAllProductFromCartDoc,
+    put: removeProductFromCartDoc,
+    patch: updateProductQuantityDoc,
+  },
+ },
+ components: {
+  schemas: {
+    Role: RoleSchema,
+    User: userSchema,
+    Login: loginSchema,
+    updatePassword: updatePasswordSchema,
+    Profile: profileSchema,
+    Product:productSchema,
+    Category:categorySchema,
+    Wish: wishSchema
+  },
+  securitySchemes: {
+    bearerAuth: {
+      type: "http",
+      scheme: "bearer",
+      bearerFormat: "JWT",
+      in: "header",
+      name: "Authorization",
     },
   },
-  components: {
-    schemas: {
-      Role: RoleSchema,
-      User: userSchema,
-      Login: loginSchema,
-      updatePassword: updatePasswordSchema,
-      Profile: profileSchema,
-      Product: productSchema,
-      Category: categorySchema,
-      Wish: wishSchema,
-    },
-    securitySchemes: {
-      bearerAuth: {
-        type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
-        in: "header",
-        name: "Authorization",
-      },
-    },
-  },
-};
+}
+}
 docRouter.use("/", serve, setup(options));
 
 export default docRouter;

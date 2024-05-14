@@ -8,9 +8,9 @@ import cartRoutes from "./cartRoutes";
 const appROutes = Router();
 
 appROutes.use("/users", userRoutes);
-appROutes.use("/products", productsRouter);
-appROutes.use("/categories", categoriesRouter);
-appROutes.use("/wishes", wishesRouter);
-appROutes.use("/messages", joinChatRoomRoutes);
+appROutes.use("/products",productsRouter);
+appROutes.use('/categories',categoriesRouter);
+appROutes.use("/messages",joinChatRoomRoutes)
+appROutes.use("/", wishesRouter);
 appROutes.use("/carts", cartRoutes);
 export default appROutes;
