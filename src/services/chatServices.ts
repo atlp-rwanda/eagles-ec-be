@@ -1,8 +1,17 @@
 
 import Message from "../sequelize/models/messages";
+
 export const newChatMessages = async(message:any) => {
     try {
-      const newMessage =   await Message.create(message);
+      const chat = {
+        sender: message.sender,
+        userId: message.userId,
+        message: message.message,
+        isPrivate: false,
+        privateChatId: undefined
+      }
+      
+      const newMessage =   await Message.create(chat);
       if(!newMessage){
         return false;
       }else{
@@ -15,7 +24,7 @@ export const newChatMessages = async(message:any) => {
 
 export const pastMessages = async() =>{
     try {
-        const currentMessages =  await Message.findAll();
+      const currentMessages =  await Message.findAll({where: {isPrivate: false}});
         if(!currentMessages){
             return false;
         }else{

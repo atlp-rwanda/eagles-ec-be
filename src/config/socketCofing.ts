@@ -1,5 +1,6 @@
 import { Server,Socket } from "socket.io";
 import { sendMessages, getPastMessages } from "../controllers/chatsController";
+import { createAPrivateMessageSocket, retrieveAUserToUserPrivateMessageSocket } from "../controllers/privateChatController";
 
 
 
@@ -9,7 +10,7 @@ import { sendMessages, getPastMessages } from "../controllers/chatsController";
         connectedClients.add(socket.id);
         io.emit('connected client', connectedClients.size);
 
-        console.log("connected client")
+        console.log(`connected client`)
         await getPastMessages(socket);
     
 
@@ -21,6 +22,13 @@ import { sendMessages, getPastMessages } from "../controllers/chatsController";
         socket.on('chat message', async(data: any) => {
             await sendMessages(io, data);
         }); 
+        socket.on('private chat message', async(data: any) =>{
+            await createAPrivateMessageSocket(socket, data);
+        } )
+        socket.on('past private messages between two users', async(data:any) =>{
+
+            await retrieveAUserToUserPrivateMessageSocket(socket, data)
+        })
     });
 }
 

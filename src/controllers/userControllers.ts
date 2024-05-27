@@ -17,6 +17,7 @@ import { env } from "../utils/env";
 import { Emailschema, resetPasswordSchema } from "../schemas/resetPasswordSchema";
 import { clearExpiredUserData } from "../jobs/isPasswordExpired";
 import { use } from "passport";
+import { fetchAllsellersService } from "../services/wishlist.service";
 
 
 export const fetchAllUsers = async (req: Request, res: Response) => {
@@ -433,3 +434,18 @@ export const verifyUserController = async (req: Request, res: Response): Promise
     res.status(500).json({ error: 'Failed to verify new user.' });
   }
 };
+export const fetchAllsellers= async (req: Request, res: Response) =>{
+  const sellers = await fetchAllsellersService();
+  if (sellers){
+    res.status(200).json(
+      {
+        data: sellers
+      }
+    );
+  }
+  else{
+    res.status(400).json({
+      message: "No sellers found"
+    })
+  }
+} 

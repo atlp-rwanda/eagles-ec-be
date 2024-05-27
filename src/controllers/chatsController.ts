@@ -9,7 +9,7 @@ export const  sendMessages = async(io:Server,data:any) =>{
     const newMessage = {
         sender,
         userId,
-        message
+        message,
     }
     const validated:any = chatMessageSchema.validate(newMessage);
     if(validated.error){
@@ -31,4 +31,3 @@ export const  getPastMessages = async(socket:Socket) =>{
 export const joiRoom = async(req:Request,res:Response) => {
     res.sendFile(path.resolve('public/index.html'))
 }
-

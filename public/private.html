@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Eagles Private Chat</title>
+    <style>
+        body {
+            display: flex;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        #container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+        }
+        #sidebar {
+            width: 33.33%;
+            background-color: #fff;
+            overflow: auto;
+        }
+        #sidebar h4 {
+            margin: 1rem;
+            font-weight: bold;
+        }
+        #sidebar ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            border-top: 1px solid #ddd;
+        }
+        #sidebar li {
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-bottom: 1px solid #ddd;
+        }
+        #sidebar li:hover,  #sidebar li:active {
+            background-color: #f0f0f0;
+        }
+        #main-chat-area {
+            width: 66.67%;
+            display: flex;
+            flex-direction: column;
+            background-color: #f0f0f0;
+        }
+        #main-chat-area h4 {
+            margin: 1rem;
+            font-weight: bold;
+        }
+        #chat-messages {
+            flex-grow: 1;
+            padding: 1rem;
+            overflow: auto;
+        }
+        #chat-messages p {
+            padding: 0.5rem;
+            border-radius: 0.4rem 0.4rem 0 0.25rem;
+            max-width: 50%;
+        }
+        #chat-messages .message-left {
+            background-color: #007bff;
+            border-radius: 0.4rem 0.4rem 0.4rem 0;
+            color: #fff;
+        }
+        #chat-messages .message-right {
+            background-color: #28a745;
+            color: #fff;
+            margin-left: auto;
+        }
+        #input-div {
+            margin: 1rem;
+            display: none;
+        }
+        #input-message {
+            flex-grow: 1;
+            width: 90%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 0.25rem;
+        }
+        #send-button {
+            padding: 0.5rem;
+            float: right;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 0.25rem;
+            cursor: pointer;
+        }
+        #send-button:hover {
+            background-color: #0056b3;
+        }
+
+        .profile-container {
+            bottom: 20px;
+            left: 20px;
+            position: absolute;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile-container i {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <!-- Sidebar for chat list -->
+        <div id="sidebar">
+            <h4>Chats with Our Sellers</h4>
+            <ul id="user-list">
+              <!-- Seller list -->
+                
+                
+            </ul>
+            <div class="profile-container" sty>
+                <i class="fas fa-cog"></i>
+                <span id="profile"></span>
+            </div>
+        </div>
+
+        <!-- Main chat area -->
+        <div id="main-chat-area">
+            <h4 id="chat-title"> Chat with Our Sellers </h4>
+            <div id="chat-messages">
+                <!-- Messages will go here -->
+               
+                
+            </div>
+            <!-- Message input -->
+            <div id="input-div">
+                <input id="input-message" type="text" placeholder="Type a message">
+                <button type="submit" id="send-button">Send</button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.5/socket.io.js" 
+    integrity="sha512-luMnTJZ7oEchNDZAtQhgjomP1eZefnl82ruTH/3Oj/Yu5qYtwL7+dVRccACS/Snp1lFXq188XFipHKYE75IaQQ==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        const socket = io();
+        const port = window.location.port;
+        const token = localStorage.getItem("loginToken");
+        const decodedToken = JSON.parse(atob(token.split(".")[1]));
+        const messageInput = document.getElementById("input-message");
+        const sendMessageBtn = document.getElementById("send-button");
+        const sellers_list = document.getElementById('user-list')
+        const chat_title = document.getElementById("chat-title")
+         profile = document.getElementById("profile")
+        let chat_area = document.getElementById("chat-messages")
+        const message_section = document.getElementById("input-div")
+        let receiverId;
+        let sellers = [];
+
+        const isProduction = window.location.hostname === "https://eagles-ec-be-development.onrender.com"
+        const Seller_URL = isProduction? "https://eagles-ec-be-development.onrender.com/api/v1/users/sellers":`http://localhost:${port}/api/v1/users/sellers`
+        const Seller_Inboxes = isProduction? "https://eagles-ec-be-development.onrender.com/api/v1/chats/private": `http://localhost:${port}/api/v1/chats/private`
+
+        profile.textContent = decodedToken.name
+
+        const addMessageToUi = (isSender, data) => {
+            const date = new Date(data.createdAt);
+            const hours = date.getHours();
+            const minutes = date.getMinutes();
+            const formattedTime = `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+
+            const element  = `<p class=" ${isSender?  "message-right" :  "message-left" }">
+                ${data.message}<span style="float: right">${formattedTime}</span>
+                </p>`
+
+                chat_area.innerHTML += element
+                chat_area.scrollTop = chat_area.scrollHeight;
+        }
+        const addPastMessageToUi = (data) =>{   
+           
+            data.forEach(data =>{
+                const isSender = data.sender === decodedToken.name
+                const date = new Date(data.createdAt);
+                const hours = date.getHours();
+                const minutes = date.getMinutes();
+
+                const formattedTime = `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+                const element  = `<p class=" ${isSender?  "message-right" :  "message-left" }">
+                ${data.message}<span style="float: right">${formattedTime}</span>
+                </p>`
+                chat_area.innerHTML += element
+                chat_area.scrollTop = chat_area.scrollHeight;
+            } 
+        )       
+
+        }
+
+        const fetchInboxes = async () =>{
+            let token = localStorage.getItem("loginToken")
+            
+            token = token.replace(/"/g, '')
+           
+            const resp = await fetch(`http://localhost:${port}/api/v1/chats/private`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`, 
+                    'Content-Type': 'application/json'
+                }
+            })
+           
+            
+            const data = await resp.json()
+           
+            
+            return data
+        }
+        
+
+        const fetchSellers = async () => {
+            const response = await fetch(`${Seller_URL}`);
+            const data = await response.json();
+            
+            sellers = data.data.map(item => item.id)
+            
+
+            return data; 
+        }
+        fetchSellers().then(
+            
+            resp => resp.data.forEach(seller =>{
+            const receiver = document.createElement('li')
+            const i =   `<i class="fa-regular fa-user"> </i>`
+            receiver.dataset.id = seller.id;
+            receiver.innerHTML = i + ' ' + seller.name;
+            sellers_list.appendChild(receiver)
+            
+            
+            // Onclick on single seller to retrieve the messages 
+
+            receiver.addEventListener("click", (e) => {
+            e.preventDefault()
+            
+            chat_title.innerHTML = i + ' ' + receiver.textContent
+            
+            receiverId = receiver.dataset.id
+            chat_area.innerHTML = ''
+            userId = decodedToken.id
+            socketId = socket.id
+            sendername = decodedToken.name
+            message_section.style.display = 'block'
+            
+            socket.emit("past private messages between two users", {userId, receiverId, socketId, sendername})
+                
+         })
+         
+        })
+    );
+        
+    
+        sendMessageBtn.addEventListener("click",async (e)=>{
+            e.preventDefault()
+            const sender = decodedToken.name
+            const userId = decodedToken.id
+            const message = messageInput.value
+            
+            socket.emit("private chat message", {sender, userId, receiverId, message})
+            messageInput.value = ""
+            
+        })
+        socket.on("validation error", (error) =>{
+            console.log(error)
+        })
+
+        socket.on("private message sent", (message) =>{
+            let isSender = message.sender === decodedToken.name   
+            addMessageToUi(isSender, message)
+        })
+
+        socket.on("past private user to user message sent", (message) =>{
+            addPastMessageToUi(message)
+        })
+
+
+    </script>
+</body>
+</html>

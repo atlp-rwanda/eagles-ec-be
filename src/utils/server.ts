@@ -45,7 +45,6 @@ export const io: SocketIOServer = new SocketIOServer(server, {
 
 export const notificationEmitter = new NotificationEmitter(io); 
 const eventHandler = new EventHandler(io, notificationEmitter);
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
