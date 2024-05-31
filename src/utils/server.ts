@@ -19,13 +19,24 @@ import { findExpiredProduct } from "../jobs/cron";
 import { env } from "./env";
 
 const app = express();
-const isDevelopment = process.env.NODE_ENV === 'development';
-const origin = isDevelopment ? "http://localhost:3000" : "https://eagles-ec-be-development.onrender.com";
+
+const allowedOrigins = [
+  env.client_url,
+  env.client_url2,
+  env.client_url3,
+  env.client_url4
+]
 
 const server: HTTPServer = createServer(app);
 export const io: SocketIOServer = new SocketIOServer(server, {
   cors: {
-    origin: origin,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST"],
     allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept"],
     credentials: true,
