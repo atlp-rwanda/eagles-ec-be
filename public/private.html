@@ -143,7 +143,7 @@
     integrity="sha512-luMnTJZ7oEchNDZAtQhgjomP1eZefnl82ruTH/3Oj/Yu5qYtwL7+dVRccACS/Snp1lFXq188XFipHKYE75IaQQ==" 
     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        const socket = io();
+        
         const port = window.location.port;
         const token = localStorage.getItem("loginToken");
         const decodedToken = JSON.parse(atob(token.split(".")[1]));
@@ -154,7 +154,17 @@
          profile = document.getElementById("profile")
         let chat_area = document.getElementById("chat-messages")
         const message_section = document.getElementById("input-div")
+        const socket = io({
+            query:{
+                userId: decodedToken.id
+            }
+        });
+        if(token){
+            socket.emit("private chats")
+        }
+        
         let receiverId;
+        let currentChatId = null;
         let sellers = [];
 
         const isProduction = window.location.hostname === "https://eagles-ec-be-development.onrender.com"
@@ -177,21 +187,18 @@
                 chat_area.scrollTop = chat_area.scrollHeight;
         }
         const addPastMessageToUi = (data) =>{   
-           
             data.forEach(data =>{
                 const isSender = data.sender === decodedToken.name
                 const date = new Date(data.createdAt);
                 const hours = date.getHours();
                 const minutes = date.getMinutes();
-
                 const formattedTime = `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
                 const element  = `<p class=" ${isSender?  "message-right" :  "message-left" }">
                 ${data.message}<span style="float: right">${formattedTime}</span>
-                </p>`
-                chat_area.innerHTML += element
+                </p>`;
+                chat_area.innerHTML += element;
                 chat_area.scrollTop = chat_area.scrollHeight;
-            } 
-        )       
+            })       
 
         }
 
@@ -271,13 +278,24 @@
             console.log(error)
         })
 
-        socket.on("private message sent", (message) =>{
+        socket.on("private message sent", (chat) =>{
+            const message = chat.sentPrivateMessage
             let isSender = message.sender === decodedToken.name   
             addMessageToUi(isSender, message)
         })
 
         socket.on("past private user to user message sent", (message) =>{
+            currentChatId = message[0].privateChatId;
             addPastMessageToUi(message)
+        })
+
+        socket.on("private message recieved", (message) =>{            
+            let isreciever = decodedToken.id === message.id
+            if(message.privateChatId === currentChatId)
+            {
+                addMessageToUi(isreciever, message)
+            }
+            
         })
 
 

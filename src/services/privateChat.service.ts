@@ -76,7 +76,12 @@ export const getUserToUserPrivateMessages = async (userId: number, receiverId: n
         if (!reciever || reciever === null || reciever === undefined){
             throw new Error("Receiver not found");
         }
-        const privateChat = await PrivateChat.findOne({where :{userId, receiverId}});
+        const privateChat = await PrivateChat.findOne({where :{
+            [Op.or]:[
+                {userId: userId, receiverId: receiverId},
+                {userId: receiverId, receiverId: userId}
+            ]
+            }});
         if (privateChat){
             const PrivateMessages = await Message.findAll({where:{privateChatId: privateChat.id}})
 

@@ -3,6 +3,7 @@ import { Socket, Server } from 'socket.io';
 import { Request, Response, NextFunction } from 'express';
 import { PrivateMessageSchema, UserToUserPrivateMessageSchema } from '../schemas/privateMessageSchema';
 import path from 'path';
+import { getSocketIdOfUser } from '../config/socketCofing'
 
 export const createAPrivateMessageController = async(req: Request, res: Response, next: NextFunction) => {
     try {
@@ -57,7 +58,14 @@ export const createAPrivateMessageSocket= async(socket: Socket, data:any) =>{
     }
     else{
         const sentPrivateMessage = await PrivateChatService.CreatePrivateMessage(message)
-        socket.emit('private message sent', sentPrivateMessage )
+        let receiverId = message.receiverId
+        let userId = message.userId
+        socket.emit('private message sent', {sentPrivateMessage, userId, receiverId} )
+        const recieverSocketId = getSocketIdOfUser(receiverId);
+        if(recieverSocketId){
+            socket.to(recieverSocketId).emit('private message recieved', sentPrivateMessage)
+        }
+        
         
     }  
 

@@ -1,4 +1,5 @@
 export const verifyOtpTemplate = (link: string,token:number) => {
+  console.log(token)
   return `<!DOCTYPE html>
   <html lang="en">
   <head>
