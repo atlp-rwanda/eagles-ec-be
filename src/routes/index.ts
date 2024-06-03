@@ -7,8 +7,10 @@ import { joinChatRoomRoutes } from "./chatRoutes";
 import cartRoutes from "./cartRoutes";
 import notificationRoutes from "./notificationRoutes";
 import paymentRouter from "./paymentRoutes";
+import PrivateChatRoutes from "./privateChatRoutes";
 const appROutes = Router();
 
+appROutes.use("/chats", PrivateChatRoutes);
 appROutes.use("/users", userRoutes);
 appROutes.use("/products", productsRouter);
 appROutes.use("/categories", categoriesRouter);

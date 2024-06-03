@@ -46,6 +46,7 @@ import { homepage } from "./home";
 import { payment } from "./payments";
 import { createReviewProduct, deleteReview, getReviewProduct, reviewSchema, updateReviewProduct } from "./reviews";
 import { getAdProducts } from "./products";
+import {PrivateChatSchema, getAllUserPrivateChats, getUserToUserPrivateMessages, createPrivateChat } from "./privateChatDoc"
 
 const docRouter = express.Router();
 
@@ -82,6 +83,7 @@ const options = {
     { name: "Wishes", description: "Endpoints related to Wishes" },
     { name: "Carts", description: "Endpoints related to Cart"},
     { name: "Payments", description: "Endpoints related to payments" },
+    {name: "PrivateChat", description: "Endpoints related to Private Chat"},
   ],
 
   paths: {
@@ -194,6 +196,13 @@ const options = {
       patch: updateReviewProduct,
       delete: deleteReview
     },
+    "/api/v1/chats/private": {
+      get: getAllUserPrivateChats,
+    },
+    "/api/v1/chats/private/{id}": {
+      post: createPrivateChat,
+      get: getUserToUserPrivateMessages,
+    },
   },
   components: {
     schemas: {
@@ -205,7 +214,8 @@ const options = {
       Product: productSchema,
       Category: categorySchema,
       Wish: wishSchema,
-      Review: reviewSchema
+      Review: reviewSchema,
+      PrivateChat: PrivateChatSchema
     },
     securitySchemes: {
       bearerAuth: {

@@ -9,4 +9,4 @@ export const chatMessageSchema = Joi.object({
  message:Joi.string()
  .min(1)
  .required(),
-})
+}).options({allowUnknown:false})

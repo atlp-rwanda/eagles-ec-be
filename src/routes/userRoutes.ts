@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { fetchAllUsers, createUserController, userLogin, updatePassword, tokenVerification, handleSuccess, handleFailure,updateProfileController, getProfileController, otpVerification,updateUserRole, changeUserAccountStatus, logout, sendResetLinkEmail, resetPasswordController, verifyUserEmailController, verifyUserController } from "../controllers/userControllers";
+import { fetchAllUsers, createUserController, userLogin, updatePassword, tokenVerification, handleSuccess, handleFailure,updateProfileController, getProfileController, otpVerification,updateUserRole, changeUserAccountStatus, logout, sendResetLinkEmail, resetPasswordController, verifyUserEmailController, verifyUserController, fetchAllsellers  } from "../controllers/userControllers";
 import { emailValidation, validateSchema } from "../middlewares/validator";
 import { isLoggedIn } from "../middlewares/isLoggedIn";
 import { passwordUpdateSchema } from "../schemas/passwordUpdate";
@@ -24,6 +24,10 @@ userRoutes.put("/passwordupdate", isLoggedIn, validateSchema(passwordUpdateSchem
 userRoutes.post("/login", emailValidation,validateSchema(logInSchema),isDisabled,isVerified,userLogin);
 userRoutes.post("/register", emailValidation, validateSchema(signUpSchema), createUserController);
 userRoutes.put("/passwordupdate", isLoggedIn, validateSchema(passwordUpdateSchema), updatePassword);
+userRoutes.get("/sellers", fetchAllsellers)
+userRoutes.put("/passwordupdate", isLoggedIn,validateSchema(passwordUpdateSchema), updatePassword)
+userRoutes.post("/login", emailValidation,validateSchema(logInSchema),isDisabled,userLogin);
+userRoutes.post("/register", emailValidation,validateSchema(signUpSchema), createUserController);
 userRoutes.get("/2fa-verify/:token",tokenVerification);
 userRoutes.post("/2fa-verify",otpVerification);
 userRoutes.get('/profile',

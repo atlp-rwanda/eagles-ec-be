@@ -62,3 +62,9 @@ export const removeProduct = async (userId: number, productId: number) => {
     return removeProduct
 }
 
+
+export const fetchAllsellersService = async() =>{
+    const sellers = await User.findAll({where: {roleId: 2}});
+
+    return sellers;
+}

@@ -151,7 +151,7 @@
     <div class="TokenVerfication" id="TokenVerfication" style="display: none;">
         <form action="" class= "verifyToken" id="verifyToken">
             <span>verifyToken: </span><br/>
-             <input type="text" id="tokenVer"><br/>
+             <input type="number" id="tokenVer"><br/>
             <button type="submit">verify</button>
          </form>
     </div>
@@ -163,10 +163,14 @@
             <div class="user-name">
                 <span><i class="fa-regular fa-user"></i></span> <input type="text" class="userName" id="user-name">
             </div>
+            <div class="seller-selector">
+                <button><a style="text-decoration: none ; background-color: #007bff; float: right; width: 200px;" href="./chats/page">Talk to our sellers Privately</a></button>
+            </div>
             <div class="chat-room" id="chat-room">
+                
                 <div class="messages" id="messages"></div>
                 <form class="send-message" id="send-message">
-                    <textarea class="message-input" id="message-input" placeholder="Start typing.."></textarea>
+                    <textarea class="message-input" id="message-input" placeholder="Type here"></textarea>
                     <button type="submit">Send <span><i class="fa-regular fa-paper-plane"></i></span></button>
                 </form>
             </div>
@@ -182,8 +186,12 @@
         const chatRoomSection = document.getElementById("chatRoom");
         const verifyToken = document.getElementById("TokenVerfication");
         const verifyTokenForm = document.getElementById("verifyToken");
+        const port = window.location.port
+       
+        const isProduction = window.location.hostname === "https://eagles-ec-be-development.onrender.com"
+        const url = isProduction ? "https://eagles-ec-be-development.onrender.com/api/v1/users/login":`http://localhost:${port}/api/v1/users/login`;
+        const twoFactorAuthUrl = isProduction? "https://eagles-ec-be-development.onrender.com/api/v1/users/2fa-verify": `http://localhost:${port}/api/v1/users/2fa-verify`
 
-        const url = "https://eagles-ec-be-development.onrender.com/api/v1/users/login";
         const loginUser = async (email, password) => {
             try {
             const response = await fetch(url, {
@@ -197,13 +205,18 @@
                 throw new Error("Login failed");
             }
             const data = await response.json();
-            localStorage.setItem("loginToken", JSON.stringify(data.token));
-            const decodedToken = JSON.parse(atob(token.split(".")[1]));
-            if(decodedToken.otp){
+            
+            
+            if (data.status === "Pending"){
+                localStorage.setItem("Token-otp_Verify", JSON.stringify(data.token));
                 showTokenVerfication();
-            }else{
-                showChatRoom();  
             }
+            if(data.status === 200){
+            localStorage.setItem("loginToken", JSON.stringify(data.token));
+            showChatRoom();  
+            }
+            
+            
             } catch (error) {
             console.error(error.message);
             }
@@ -213,15 +226,38 @@
             e.preventDefault();
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
-            await loginUser(email, password);
+            const response = await loginUser(email, password);
+            const data = await response.json();
             localStorage.setItem("loginToken", JSON.stringify(data.token));
         });
 
         
         verifyTokenForm.addEventListener("submit", async(e) =>{
             e.preventDefault();
-            const verifyToken = document.getElementById("tokenVer").value;
-            localStorage.setItem("loginToken", JSON.stringify(verifyToken));
+            const otp = parseInt(document.getElementById("tokenVer").value);
+            
+            let pre_token = localStorage.getItem("Token-otp_Verify")
+            pre_token = pre_token.replace(/"/g, '');
+            // fixing verification token to the url params 
+            const url = new URL(twoFactorAuthUrl)
+            const params = new URLSearchParams();
+            params.append("token", pre_token);
+            url.search = params.toString();
+            const adjustedUrl = url.toString()
+
+            
+            const response = await fetch(adjustedUrl, {
+                method: "POST",
+                headers: {
+                "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ otp, pre_token }),
+            })
+            
+            const data = await response.json();
+            
+            localStorage.setItem("loginToken", JSON.stringify(data.token));
+            verifyToken.style.display = "none";
             showChatRoom();
         })
 
@@ -244,13 +280,14 @@
         const active = document.getElementById("active-list");
         const token = localStorage.getItem("loginToken");
         const decodedToken = JSON.parse(atob(token.split(".")[1]));
+       
         let userId;
         if (token) {
         try {
             const { id, name } = decodedToken;
             userNameInput.value = name;
             userId = id;
-            console.log(decodedToken);
+            
         } catch (error) {
             console.error("Error parsing token:", error.message);
         }
@@ -304,5 +341,13 @@
 
 
     </script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="login.js"></script>
+    <script src="client.js"></script>
+    <!-- <script>
+        const localURL = process.env.local_url
+        const serverURL = process.env.server_url
+        fetch(`${localURL}/`)
+    </script> -->
 </body>
 </html>

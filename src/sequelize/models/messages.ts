@@ -1,11 +1,14 @@
 import { Model,DataTypes } from "sequelize";
 import sequelize from "../../config/dbConnection";
 import User from "./users";
+import PrivateChat from "./privateChats";
 
 export interface MessagesAttributes{
     id?:number,
     sender:string,
     userId:number,
+    isPrivate?: boolean
+    privateChatId?:number,
     message:string,
     createdAt?:Date,
     updatedAt?:Date 
@@ -15,6 +18,8 @@ class Message extends Model<MessagesAttributes> implements MessagesAttributes{
     id?:number;
     sender!:string;
     userId!: number;
+    privateChatId!: number | undefined;
+    isPrivate!: boolean;
     message!:string;
     createdAt?: Date | undefined;
     updatedAt?: Date | undefined;
@@ -38,6 +43,18 @@ Message.init({
             key:"id"
         } 
     },
+    isPrivate:{
+        type: DataTypes.BOOLEAN,
+        allowNull: false,
+    },
+    privateChatId:{
+        type:DataTypes.INTEGER,
+        allowNull: true,
+        references:{
+            model:"PrivateChats",
+            key:"id"
+        }
+    },
     message:{
         type: DataTypes.STRING,
         allowNull: false,
@@ -51,5 +68,11 @@ User.hasMany(Message,{
 })
 Message.belongsTo(User,{ 
     foreignKey: 'userId' 
+})
+PrivateChat.hasMany(Message,{
+    foreignKey: 'privateChatId'
+})
+Message.belongsTo(PrivateChat,{ 
+    foreignKey: 'privateChatId' 
 })
 export default Message;
