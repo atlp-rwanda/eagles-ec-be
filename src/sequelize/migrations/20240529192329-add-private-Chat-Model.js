@@ -36,20 +36,20 @@ module.exports = {
       }
     });
 
-    // await queryInterface.addColumn('messages', 'privateChatId', {
-    //   type: Sequelize.INTEGER,
-    //   allowNull: true,
-    //   references: {
-    //     model: 'PrivateChats',
-    //     key: 'id'
-    //   },
-    //   onUpdate: 'CASCADE',
-    //   onDelete: 'SET NULL',
-    // });
-    // await queryInterface.addColumn('messages', 'isPrivate',{
-    //   type: Sequelize.BOOLEAN,
-    //   allowNull: false
-    // })
+    await queryInterface.addColumn('messages', 'privateChatId', {
+      type: Sequelize.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'PrivateChats',
+        key: 'id'
+      },
+      onUpdate: 'CASCADE',
+      onDelete: 'SET NULL',
+    });
+    await queryInterface.addColumn('messages', 'isPrivate',{
+      type: Sequelize.BOOLEAN,
+      allowNull: false
+    })
     
 
     
@@ -58,8 +58,8 @@ module.exports = {
 
   async down (queryInterface, Sequelize) {
     await queryInterface.dropTable('PrivateChats');
-    // await queryInterface.removeColumn('messages', 'privateChatId');
-    // await queryInterface.removeColumn('messages', 'isPrivate')
+    await queryInterface.removeColumn('messages', 'privateChatId');
+    await queryInterface.removeColumn('messages', 'isPrivate')
    
   }
 };
