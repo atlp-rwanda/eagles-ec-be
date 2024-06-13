@@ -16,8 +16,8 @@ const productsRouter = Router();
 productsRouter.get("/search",isPasswordOutOfDate, searchProductController)
 productsRouter.get('/ads', getAds);
 
-productsRouter.get("/",isLoggedIn,isPasswordOutOfDate,fetchProducts);
-productsRouter.get("/:id",isLoggedIn,isPasswordOutOfDate,fetchSingleProduct);
+productsRouter.get("/",fetchProducts);
+productsRouter.get("/:id",fetchSingleProduct);
 productsRouter.post("/",isLoggedIn,isPasswordOutOfDate,isAseller,upload.array('images'),
 validateSchema(productDataSchema),isCategoryExist,addProducts);
 productsRouter.patch("/:id",isLoggedIn,isPasswordOutOfDate,isAseller,upload.array('images'),productsUpdate);
