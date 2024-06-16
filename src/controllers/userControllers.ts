@@ -165,10 +165,8 @@ export const tokenVerification = async (req: Request, res: Response) => {
       const user = await User.findOne({ where: { id: userId }, attributes: { exclude: ["password"] } });
       //@ts-ignore
       const accessToken = await generateToken(user);
-      return res.status(200).json({
-        message: "logged in successfuly",
-        token: accessToken,
-      });
+      const link = process.env.NODE_ENV !== "production"? `${env.redirect_local_url}/2fa-verify?token=${accessToken}`: `${env.redirect_remote_url}/2fa-verify?token=${accessToken}`;
+      return res.status(200).redirect(link);
     } else {
       return res.status(401).json({
         message: "Token expired",

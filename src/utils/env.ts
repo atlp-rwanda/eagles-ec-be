@@ -22,5 +22,7 @@ export const env = {
   client_url4: process.env.CLIENT_URL4 as string,
   stripe_secret: process.env.STRIPE_SECRET_KEY as string,
   password_expiration_time: process.env.TIME_FOR_PASSWORD_EXPIRATION as string,
-  ADS_URL: process.env.ADS_URL as String
+  ADS_URL: process.env.ADS_URL as String,
+  redirect_local_url:process.env.REDIRECT_LOCAL_URL as string,
+  redirect_remote_url:process.env.REDIRECT_REMOTE_URL as string
 };
