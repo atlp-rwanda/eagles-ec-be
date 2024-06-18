@@ -6,6 +6,7 @@ export const generateToken = async (user: IUser) => {
   const accessToken = sign(
     {
       id:user.id,
+      roleId:user.roleId,
       name:user.name,
       email: user.email,
       password: user.password,
