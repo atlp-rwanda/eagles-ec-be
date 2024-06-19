@@ -16,7 +16,6 @@ import { generateRandomNumber } from "../utils/generateRandomNumber";
 import { env } from "../utils/env";
 import { Emailschema, resetPasswordSchema } from "../schemas/resetPasswordSchema";
 import { clearExpiredUserData } from "../jobs/isPasswordExpired";
-import { use } from "passport";
 import { fetchAllsellersService } from "../services/wishlist.service";
 
 
@@ -203,10 +202,10 @@ export const handleSuccess = async (req: Request, res: Response) => {
       token = await generateToken(foundUser);
     }
 
-    return res.status(200).json({
-      token: token,
-      message: 'success'
-    });
+    const link = process.env.NODE_ENV !== "production"? `${env.redirect_local_url}/login?token=${token}`: `${env.redirect_remote_url}/login?token=${token}`;
+    return res.status(200).redirect(link);
+
+
   } catch (error: any) {
     return res.status(500).json({
       message: error.message,
