@@ -9,6 +9,7 @@ export const productDataSchema = Joi.object({
   .min(3)
   .max(40)
   .required(),
+  description: Joi.string().required(),
   images: Joi.array().min(4).max(8),
   stockQuantity:Joi.number()
   .required(),

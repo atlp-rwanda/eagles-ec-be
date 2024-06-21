@@ -29,6 +29,7 @@ export enum STATUS {
 export interface ProductType{
   id?:number,
   name:string,
+  description: string,
   images:string[],
   stockQuantity:number,
   price:number,
