@@ -1,6 +1,7 @@
 export const dummy = [
   {
     name: "MacBook Pro M3",
+    description: "product description",
     images: [
       "https://www.notebookcheck.net/fileadmin/_processed_/a/3/csm_IMG_1008_47c6b245b1.jpg",
       "https://www.notebookcheck.net/fileadmin/_processed_/a/3/csm_IMG_1008_47c6b245b1.jpg",
@@ -20,6 +21,7 @@ export const dummy = [
   },
   {
     name: "MacBook Pro M2",
+    description: "product description",
     images: [
       "https://www.notebookcheck.net/fileadmin/_processed_/a/3/csm_IMG_1008_47c6b245b1.jpg",
       "https://www.notebookcheck.net/fileadmin/_processed_/a/3/csm_IMG_1008_47c6b245b1.jpg",
@@ -39,6 +41,7 @@ export const dummy = [
   },
   {
     name: "Iphone 13",
+    description: "product description",
     images: [
       "https://images.macrumors.com/t/egbqDs7OtftrKl9nJnbNgv1WET0=/1600x0/article-new/2021/09/Apple-iPhone-13-colors-lineup-2022.jpg",
       "https://images.macrumors.com/t/egbqDs7OtftrKl9nJnbNgv1WET0=/1600x0/article-new/2021/09/Apple-iPhone-13-colors-lineup-2022.jpg",
@@ -58,6 +61,7 @@ export const dummy = [
   },
   {
     name: "Logitech Mouse",
+    description: "product description",
     images: [
       "https://images.macrumors.com/t/egbqDs7OtftrKl9nJnbNgv1WET0=/1600x0/article-new/2021/09/Apple-iPhone-13-colors-lineup-2022.jpg",
       "https://images.macrumors.com/t/egbqDs7OtftrKl9nJnbNgv1WET0=/1600x0/article-new/2021/09/Apple-iPhone-13-colors-lineup-2022.jpg",
@@ -77,6 +81,7 @@ export const dummy = [
   },
   {
     name: "Mechanical Keyboard",
+    description: "product description",
     images: [
       "https://images.macrumors.com/t/egbqDs7OtftrKl9nJnbNgv1WET0=/1600x0/article-new/2021/09/Apple-iPhone-13-colors-lineup-2022.jpg",
       "https://images.macrumors.com/t/egbqDs7OtftrKl9nJnbNgv1WET0=/1600x0/article-new/2021/09/Apple-iPhone-13-colors-lineup-2022.jpg",

@@ -89,7 +89,7 @@ export const addProducts = async (req: Request, res: Response) => {
           }
           //@ts-ignore
         const loggedIn:any = req.user;
-        const {name,stockQuantity,price,discount,categoryID,expiryDate}:ProductType = req.body;
+        const {name,stockQuantity,price,discount, description, categoryID,expiryDate}:ProductType = req.body;
         const product = {
             name,
             images:ulr,
@@ -99,6 +99,7 @@ export const addProducts = async (req: Request, res: Response) => {
             categoryID,
             userId : loggedIn.id,
             expiryDate,
+            description,
             createdAt: new Date(),
             updatedAt: new Date() 
         };

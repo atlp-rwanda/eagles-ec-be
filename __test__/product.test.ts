@@ -39,6 +39,7 @@ const dummySeller = {
 
 const product:any = {
     name: "pens",
+    description: "Product description",
     images: ["image1.jpg", "image2.jpg", "image3.jpg", "image4.jpg"],
     stockQuantity: 8,
     
@@ -240,6 +241,7 @@ const imagePaths = [
       const response = await request(app)
       .post('/api/v1/products')
         .field("name", "pens")
+        .field("description", "Product description")
         .attach("images",images[0],{filename:"1680673137259.jpg"})
         .attach("images",images[1],{filename:"1680673137259.jpg"})
         .attach("images",images[2],{filename:"1680673137259.jpg"})
@@ -258,6 +260,7 @@ const imagePaths = [
     const response = await request(app)
     .post('/api/v1/products')
     .field("name", "pens")
+    .field("description", "Product description")
     .attach("images",images[0],{filename:"1680673137259.jpg"})
     .attach("images",images[1],{filename:"1680673137259.jpg"})
     .attach("images",images[2],{filename:"1680673137259.jpg"})

@@ -6,6 +6,7 @@ import Review from "./reviews";
 export interface ProductsAttributes{
   id?:number,
   name:string,
+  description: string,
   images:string[],
   stockQuantity:number,
   price:number,
@@ -21,6 +22,7 @@ export interface ProductsAttributes{
 class Product extends Model<ProductsAttributes> implements ProductsAttributes{
     id?: number;
     name!: string;
+    description!: string;
     images!: string[];
     stockQuantity!: number;
     price!: number;
@@ -43,6 +45,10 @@ Product.init({
     name:{
         type: DataTypes.STRING,
         allowNull: false,
+    },
+    description: {
+      type:DataTypes.STRING,
+      allowNull: false,
     },
     images:{
         type:DataTypes.ARRAY(DataTypes.STRING(10485760)),
