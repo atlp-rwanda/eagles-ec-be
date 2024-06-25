@@ -164,7 +164,7 @@ export const tokenVerification = async (req: Request, res: Response) => {
       const user = await User.findOne({ where: { id: userId }, attributes: { exclude: ["password"] } });
       //@ts-ignore
       const accessToken = await generateToken(user);
-      const link =`${env.fe_url}/2fa-verify`;
+      const link = process.env.NODE_ENV !== "production"? `${env.redirect_local_url}/2fa-verify?token=${accessToken}`: `${env.redirect_remote_url}/2fa-verify?token=${accessToken}`;
       return res.status(200).redirect(link);
     } else {
       return res.status(401).json({
@@ -172,8 +172,9 @@ export const tokenVerification = async (req: Request, res: Response) => {
       });
     }
   } catch (error: any) {
-    const link =`${env.fe_url}/2fa-verify`;
-      return res.status(200).redirect(link);
+    return res.status(500).json({
+      message: error.message,
+    });
 }
 };
 export const handleSuccess = async (req: Request, res: Response) => {
