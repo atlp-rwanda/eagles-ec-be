@@ -158,18 +158,16 @@ export const tokenVerification = async (req: Request, res: Response) => {
 
   try {
     const decoded = await decodeMagicLinkToken(token);
+    const link = `${env.fe_url}/2fa-verify`;
     //@ts-ignore
     const { otp, userId } = decoded;
     if (otp) {
       const user = await User.findOne({ where: { id: userId }, attributes: { exclude: ["password"] } });
       //@ts-ignore
       const accessToken = await generateToken(user);
-      const link = process.env.NODE_ENV !== "production"? `${env.redirect_local_url}/2fa-verify?token=${accessToken}`: `${env.redirect_remote_url}/2fa-verify?token=${accessToken}`;
       return res.status(200).redirect(link);
     } else {
-      return res.status(401).json({
-        message: "Token expired",
-      });
+      return res.status(401).redirect(link);
     }
   } catch (error: any) {
     return res.status(500).json({
@@ -202,7 +200,7 @@ export const handleSuccess = async (req: Request, res: Response) => {
       token = await generateToken(foundUser);
     }
 
-    const link = process.env.NODE_ENV !== "production"? `${env.redirect_local_url}/login?token=${token}`: `${env.redirect_remote_url}/login?token=${token}`;
+    const link = process.env.NODE_ENV !== "production"? `${env.fe_url}/login?token=${token}`: `${env.fe_url}/login?token=${token}`;
     return res.status(200).redirect(link);
 
 

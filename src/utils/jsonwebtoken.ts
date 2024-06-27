@@ -8,8 +8,7 @@ export const generateToken = async (user: IUser) => {
       id:user.id,
       roleId:user.roleId,
       name:user.name,
-      email: user.email,
-      password: user.password,
+      email: user.email
     },
     `${env.jwt_secret}`,
     { expiresIn: "72h" },
