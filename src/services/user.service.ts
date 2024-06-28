@@ -235,7 +235,7 @@ export const  sendResetLinkEmail = async (email: any) =>{
         return { status: 404, message: 'User not found.' };
     }
     const token = generateResetToken(email, 60);
-    const resetLink = `${process.env.REMOTE_URL || `${process.env.LOCAL_URL}:${process.env.PORT}`}/reset-password?token=${token}`;
+    const resetLink = `${process.env.FE_URL}/reset-password?token=${token}`;
     const subject = "Forgot Password";
     await sendEmailService(user, subject, generatePasswordResetEmail(resetLink));
 
