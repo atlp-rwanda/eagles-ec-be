@@ -99,7 +99,7 @@ export const createProducts = async (data: ProductType) => {
 };
 
 export const updateProducts = async (req: Request, res: Response) => {
-  const { name, stockQuantity, price, discount, categoryID, expiryDate }: any = req.body;
+  const { name, stockQuantity, price, discount, categoryID, expiryDate, description }: any = req.body;
   try {
     let uploadedImages: any;
     let url: any[] = [];
@@ -131,6 +131,7 @@ export const updateProducts = async (req: Request, res: Response) => {
         price: price || product.price,
         discount: discount || product.discount,
         categoryID: categoryID || product.categoryID,
+        description: description || product.description,
         expiryDate: expiryDate || product.expiryDate,
       });
       return updateProduct;
