@@ -196,15 +196,6 @@ describe("Testing user Routes", () => {
   
       expect(response.status).toBe(400);
    })
-   
-  test("should return all users in db --> given '/api/v1/users'", async () => {
-    const spy = jest.spyOn(User, "findAll");
-    const spy2 = jest.spyOn(userServices, "getAllUsers");
-    const response = await request(app).get("/api/v1/users");
-    expect(spy).toHaveBeenCalled();
-    expect(spy2).toHaveBeenCalled();
-  }, 20000);
-
   test("Should return status 401 to indicate Unauthorized user", async () => {
     const loggedInUser = {
       email: userData.email,
@@ -241,6 +232,19 @@ describe("Testing user Routes", () => {
             expect(response.status).toBe(200)
             expect(response.body.message).toBe('User verified successfully.')
     },60000)
+
+    test("should return 200 when all roles are fetched", async () => {
+      const response = await request(app)
+        .get("/api/v1/roles").set('Authorization', `Bearer ${adminToken}`);
+      expect(response.status).toBe(200);
+    });
+    test("should return all users in db --> given '/api/v1/users'", async () => {
+      const spy = jest.spyOn(User, "findAll");
+      const spy2 = jest.spyOn(userServices, "getAllUsers");
+      const response = await request(app).get("/api/v1/users").set('Authorization', `Bearer ${adminToken}`);;
+      expect(spy).toHaveBeenCalled();
+      expect(spy2).toHaveBeenCalled();
+    }, 20000);
   
   test("should update dummyseller's role to seller", async () => {
     const logDummySeller = await request(app).post("/api/v1/users/login").send({
@@ -471,13 +475,6 @@ describe("Admin should be able to CRUD roles", () => {
       .set("Authorization", "Bearer " + adminToken);
     expect(response.status).toBe(404);
   })
-
-  test("should return 200 when all roles are fetched", async () => {
-    const response = await request(app)
-      .get("/api/v1/roles")
-    expect(response.status).toBe(200);
-  });
-
   test("should return 200 when a role is updated", async () => {
     const response = await request(app)
       .patch("/api/v1/roles/" + newRoleId)
@@ -610,6 +607,8 @@ describe("Verifying user account",()=>{
   },60000)
 
 })
+
+
 
 afterAll(async () => {
   try {
