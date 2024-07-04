@@ -19,7 +19,7 @@ import { isPasswordOutOfDate } from "../middlewares/isPasswordOutOfDate";
 import { isVerified } from "../middlewares/isVerified";
 const userRoutes = Router();
 
-userRoutes.get("/", fetchAllUsers);
+userRoutes.get("/",isLoggedIn,isAdmin, fetchAllUsers);
 userRoutes.put("/passwordupdate", isLoggedIn, validateSchema(passwordUpdateSchema), updatePassword)
 userRoutes.post("/login", emailValidation,validateSchema(logInSchema),isDisabled,isVerified,userLogin);
 userRoutes.post("/register", emailValidation, validateSchema(signUpSchema), createUserController);

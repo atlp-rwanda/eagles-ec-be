@@ -9,7 +9,7 @@ import { isPasswordOutOfDate } from '../middlewares/isPasswordOutOfDate';
 const RoleRouter = express.Router();
 
 RoleRouter.post('/', isLoggedIn,isPasswordOutOfDate, isAdmin, validateSchema(roleSchema), roleController.createRole);
-RoleRouter.get('/',roleController.getRoles);
+RoleRouter.get('/',isLoggedIn,isAdmin,roleController.getRoles);
 RoleRouter.patch('/:id', isLoggedIn,isPasswordOutOfDate, isAdmin, validateSchema(roleSchema),roleController.updateRole);
 RoleRouter.delete('/:id', isLoggedIn,isPasswordOutOfDate, isAdmin, roleController.deleteRole);
 
