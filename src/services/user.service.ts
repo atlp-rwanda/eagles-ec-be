@@ -143,13 +143,15 @@ export const updateProfileServices = async (
     import("../sequelize/models/profiles")
     .ProfileAttributes >) => {
     try {
-        const profile = await Profile.findOne({where: {userId}});
+        let profile = await Profile.findOne({where: {userId}});
         
         if (!profile) {
-            throw new Error("No Profile found");
+          profileData.userId = userId;
+          //@ts-ignore
+          profile = await Profile.create(profileData);
+        }else{
+          await profile.update(profileData)
         }
-       
-        await profile.update(profileData)
     } catch (error) {
        throw new Error("Error in update profile");
     }
@@ -260,10 +262,11 @@ export const resetPassword = async (token: string, newPassword: string): Promise
     }
     const hashPassword = await hashedPassword(newPassword);
     await user.update({ password: hashPassword });
+    user.lastPasswordUpdateTime = new Date();
+    await user.save();
     const subject = 'Password Updated Confirmation';
     await sendEmailService(user, subject, generatePasswordUpdateEmailContent(user.name));
     await addToBlacklist(token);
-
     return { status: 200, message: 'Password updated successfully.' };
   } catch (error) {
     return { status: 500, message: 'Internal server error.' };
