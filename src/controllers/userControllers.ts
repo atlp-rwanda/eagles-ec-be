@@ -17,7 +17,8 @@ import { env } from "../utils/env";
 import { Emailschema, resetPasswordSchema } from "../schemas/resetPasswordSchema";
 import { clearExpiredUserData } from "../jobs/isPasswordExpired";
 import { fetchAllsellersService } from "../services/wishlist.service";
-
+import Profile from "../sequelize/models/profiles";
+import { error } from "console";
 
 export const fetchAllUsers = async (req: Request, res: Response) => {
   try {
@@ -192,7 +193,7 @@ export const handleSuccess = async (req: Request, res: Response) => {
         username: user.name.familyName,
         isVerified:true,
         //@ts-ignore
-        password: null
+        password: null,
       });
       token = await generateToken(newUser);
       foundUser = newUser;
@@ -271,11 +272,9 @@ export const updateProfileController = async (req: Request, res: Response) => {
            status: 200,
            message: "You updated your profile sucessfully!",
            updatedProfile
-       });
-       
+       });   
    }
-
-   catch(error) {    
+   catch(error) {   
        res.status(500).json({ error: 'Internal server error' });
    }
 }
