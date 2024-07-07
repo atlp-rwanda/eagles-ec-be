@@ -32,13 +32,7 @@ import {
   changeProductAvailability,
 } from "./products";
 import { getCategories, addCategories, getSingleCategory, updateCategories, deleteCategories, categorySchema } from "./categories";
-  import {
-    RoleSchema,
-    getRoles,
-    createRole,
-    updateRole,
-    deleteRole
-  } from "./roledoc";
+import { RoleSchema, getRoles, createRole, updateRole, deleteRole } from "./roledoc";
 import { AddToWishes, deleteWish, getWishes, getWishesByProduct, wishSchema } from "./wishes";
 import { addItemToCartDoc, clearAllProductFromCartDoc, removeProductFromCartDoc, updateProductQuantityDoc, viewCartDoc } from "./cart";
 import { getAllNotifications, readNotification } from "./notifications";
@@ -46,7 +40,7 @@ import { homepage } from "./home";
 import { payment } from "./payments";
 import { createReviewProduct, deleteReview, getReviewProduct, reviewSchema, updateReviewProduct } from "./reviews";
 import { getAdProducts } from "./products";
-import {PrivateChatSchema, getAllUserPrivateChats, getUserToUserPrivateMessages, createPrivateChat } from "./privateChatDoc"
+import { PrivateChatSchema, getAllUserPrivateChats, getUserToUserPrivateMessages, createPrivateChat } from "./privateChatDoc";
 
 const docRouter = express.Router();
 
@@ -72,7 +66,7 @@ const options = {
   basePath: "/",
 
   tags: [
-    { name: "Home"},
+    { name: "Home" },
     { name: "Users", description: "Endpoints related to users" },
     {
       name: "Roles",
@@ -81,9 +75,9 @@ const options = {
     { name: "Products", description: "Endpoints related to products" },
     { name: "Categories", description: "Endpoints related categories" },
     { name: "Wishes", description: "Endpoints related to Wishes" },
-    { name: "Carts", description: "Endpoints related to Cart"},
+    { name: "Carts", description: "Endpoints related to Cart" },
     { name: "Payments", description: "Endpoints related to payments" },
-    {name: "PrivateChat", description: "Endpoints related to Private Chat"},
+    { name: "PrivateChat", description: "Endpoints related to Private Chat" },
   ],
 
   paths: {
@@ -123,7 +117,7 @@ const options = {
     },
 
     "/api/v1/users/me": {
-      post: verifyUserAccessToken,
+      get: verifyUserAccessToken,
     },
     "/api/v1/roles": {
       get: getRoles,
@@ -146,7 +140,7 @@ const options = {
       delete: deleteProducts,
     },
     "/api/v1/products/ads": {
-      get: getAdProducts
+      get: getAdProducts,
     },
     "/api/v1/categories": {
       get: getCategories,
@@ -169,7 +163,7 @@ const options = {
     },
     "/api/v1/products/{id}/wishes": {
       get: getWishesByProduct,
-      delete: deleteWish
+      delete: deleteWish,
     },
     "/api/v1/products/search": {
       get: searchProduct,
@@ -188,13 +182,13 @@ const options = {
       get: readNotification,
     },
     "/api/v1/payment/checkout": {
-      post: payment
+      post: payment,
     },
-    "/api/v1/products/{pid}/reviews":  {
+    "/api/v1/products/{pid}/reviews": {
       get: getReviewProduct,
       post: createReviewProduct,
       patch: updateReviewProduct,
-      delete: deleteReview
+      delete: deleteReview,
     },
     "/api/v1/chats/private": {
       get: getAllUserPrivateChats,
@@ -215,7 +209,7 @@ const options = {
       Category: categorySchema,
       Wish: wishSchema,
       Review: reviewSchema,
-      PrivateChat: PrivateChatSchema
+      PrivateChat: PrivateChatSchema,
     },
     securitySchemes: {
       bearerAuth: {
