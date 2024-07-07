@@ -291,6 +291,7 @@ test("should return all products in db --> given '/api/v1/products'", async () =
 
   test('It should return status 201 for Update products',async() =>{
     const images = imagePaths.map(imagePath => fs.readFileSync(imagePath));
+    const removeImages: any[] = [];
     const response = await request(app)
     .patch(`/api/v1/products/${productId}`)
     .field("name", "pens")
@@ -298,6 +299,7 @@ test("should return all products in db --> given '/api/v1/products'", async () =
     .attach("images",images[1],{filename:"1680673137259.jpg"})
     .attach("images",images[2],{filename:"1680673137259.jpg"})
     .attach("images",images[3],{filename:"1680673137259.jpg"})
+    .field('removeImages', JSON.stringify(removeImages))
     .field('stockQuantity', 8)
     .field('price', 5000)
     .field('discount', 3.5)

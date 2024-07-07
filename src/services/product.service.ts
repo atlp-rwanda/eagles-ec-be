@@ -99,7 +99,7 @@ export const createProducts = async (data: ProductType) => {
 };
 
 export const updateProducts = async (req: Request, res: Response) => {
-  const { name, stockQuantity, price, discount, categoryID, expiryDate, description }: any = req.body;
+  const { name, stockQuantity, price, discount, categoryID, expiryDate, description, removeImages = [] } = req.body;
   try {
     let uploadedImages: any;
     let url: any[] = [];
@@ -108,19 +108,26 @@ export const updateProducts = async (req: Request, res: Response) => {
     for (const imageUrl of uploadedImages) {
       url.push(imageUrl);
     }
-
     const id = req.params.id;
     await isLoggedIn(req, res, () => {});
     //@ts-ignore
     const loggedInUser: any = req.user;
     const product: any = await Product.findOne({ where: { id, userId: loggedInUser.id } });
+    let updatedImages;
+    if (removeImages && removeImages.length > 0) {
+      updatedImages = product.images.filter((img: string) => !removeImages.includes(img));
+  }
     if (url.length === 0) {
       newImage = undefined;
     }
     if (product?.images.length > 8) {
       product.images.slice(-8);
     }
-    newImage = product?.images?.concat(url);
+    if(removeImages){
+      newImage = updatedImages.concat(url);
+    } else {
+      newImage = product?.images?.concat(url)
+    }
     if (!product) {
       return false;
     } else {
