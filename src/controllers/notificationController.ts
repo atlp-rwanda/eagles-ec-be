@@ -2,12 +2,17 @@ import { Request, Response } from "express";
 import Notification from "../sequelize/models/Notification";
 import { UserAttributes } from "../sequelize/models/users";
 import eventEmmiter from "../events/emmiter";
+import { notificationEmitter } from "../utils/server";
 
 export const getUserNotifications = async (req: Request, res: Response) => {
   //@ts-ignore
   const currentUser: UserAttributes = req.user;
   try {
     const userNotifications = await Notification.findAll({ where: { userId: currentUser.id } });
+
+    const allNots = userNotifications.map((not) => not.dataValues);
+
+    notificationEmitter.emit("notifications", allNots);
 
     return res.status(200).json({
       message: "user notification",

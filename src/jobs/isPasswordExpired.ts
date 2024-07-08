@@ -4,6 +4,7 @@ import { getAllUsers } from "../services/user.service";
 import { env } from "../utils/env";
 import { sendEmailService } from "../services/mail.service";
 import { passwordExpirationHtmlContent } from "../email-templates/passwordExpiredNotification";
+import { notificationEmitter } from "../utils/server";
 
 let latestExpiredUserData = new Set<any>();
 export let expiredUserData = new Set<any>();
@@ -24,7 +25,7 @@ export const isPasswordExpired = () => {
       } else {
         const timeDifference: any = currentTime - lastPasswordUpdateTime;
         if (timeDifference >= millseconddPerMin * parseInt(env.password_expiration_time) && !latestExpiredUserData.has(user.id)) {
-          passwordEventEmitter.emit("password expired", user);
+          passwordEventEmitter.emit("password expired", user.dataValues);
           latestExpiredUserData.add(user.id);
           emailPromises.push(sendEmailService(user, "Password expired", passwordExpirationHtmlContent(user.name)));
         }
