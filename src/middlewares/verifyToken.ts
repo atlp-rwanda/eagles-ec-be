@@ -34,11 +34,7 @@ export const verifyToken = async (req: Request, res: Response) => {
         message: "Token has expired. Please login again.",
       });
     }
-    return res.status(200).json({
-      message: "You're Logged In Successfully",
-      username: user.username,
-      user,
-    });
+    return res.status(200).json(user);
   } catch (error: any) {
     return res.status(401).json({
       status: "failed",
