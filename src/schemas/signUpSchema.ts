@@ -36,3 +36,9 @@ export const profileSchemas = Joi.object({
     country: Joi.string()
     .optional()
 })
+
+export const OrderStatus = Joi.object({
+  status: Joi.string()
+  .valid("Pending", "Delivered", "Cancelled")
+  .required()
+})

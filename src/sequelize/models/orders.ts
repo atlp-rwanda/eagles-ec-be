@@ -2,6 +2,7 @@ import { Model, DataTypes } from "sequelize";
 import sequelize from "../../config/dbConnection";
 import User from "./users";
 import OrderItem from "./orderItems";
+import Product from "./products";
 
 
 export interface OrderAttributes {
@@ -38,7 +39,7 @@ Order.init({
   },
   status: {
     type: DataTypes.ENUM,
-    values: ["pending", "delivered", "canceled"],
+    values: ["Pending", "Delivered", "Cancelled"],
     defaultValue: "pending",
     allowNull: false,
   },
@@ -62,5 +63,8 @@ Order.init({
 Order.belongsTo(User, { foreignKey: "buyerId", as: "buyer" });
 User.hasMany(Order, { foreignKey: "buyerId", as: "orders" });
 Order.hasMany(OrderItem, { foreignKey: "orderId", as: "items" });
+Order.hasMany(OrderItem, { foreignKey: "status", as: "statuses"})
+Order.hasMany(Product, { foreignKey: "id", as: "products"})
+OrderItem.belongsTo(Order, { foreignKey: 'orderId', as: 'order' });
 
 export default Order
