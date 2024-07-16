@@ -33,6 +33,7 @@ export const getAllUsers = async () => {
   try {
     const users = await User.findAll({
       attributes: ['id', 'name', 'username', 'email','lastPasswordUpdateTime', 'roleId', 'createdAt', 'updatedAt','isActive'],
+      include: [ {model: Profile,  as: "profile" }]
     });
     if (users.length === 0) {
       console.log("no user");
@@ -41,6 +42,21 @@ export const getAllUsers = async () => {
   } catch (error: any) {
     console.log(error.message);
     throw new Error(error.message);
+  }
+};
+export const getUserById = async (id: number) => {
+  try {
+    const user = await User.findByPk(id, {
+      // attributes: ['id', 'name', 'username', 'email','lastPasswordUpdateTime', 'roleId', 'createdAt', 'updatedAt','isActive'],
+      include: [ {model: Profile,  as: "profile" }]
+    });
+    if (!user) {
+      return null;
+    }
+    return user;
+  } catch (error: any) {
+    // console.log(error.message);
+    throw new Error(error);
   }
 };
 
