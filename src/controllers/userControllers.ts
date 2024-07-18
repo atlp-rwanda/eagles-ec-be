@@ -11,14 +11,13 @@ import User from "../sequelize/models/users";
 import { verifyOtpTemplate } from "../email-templates/verifyotp";
 import { getProfileServices, updateProfileServices } from "../services/user.service";
 import uploadFile from "../utils/handleUpload";
-import { updateUserRoleService } from "../services/user.service";
+import { updateUserRoleService,updateUserInfo } from "../services/user.service";
 import { generateRandomNumber } from "../utils/generateRandomNumber";
 import { env } from "../utils/env";
 import { Emailschema, resetPasswordSchema } from "../schemas/resetPasswordSchema";
 import { clearExpiredUserData } from "../jobs/isPasswordExpired";
 import { fetchAllsellersService } from "../services/wishlist.service";
 import Profile from "../sequelize/models/profiles";
-import { error } from "console";
 
 export const fetchAllUsers = async (req: Request, res: Response) => {
   try {
@@ -36,6 +35,26 @@ export const fetchAllUsers = async (req: Request, res: Response) => {
       });
     }
   } catch (error: any) {
+    res.status(500).json({
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
+export const fetchUserById = async (req: Request, res: Response) => {
+  try {
+    // @ts-ignore
+    const userId = req.user?.id;
+    const user = await userService.getUserById(Number(userId));
+    if (!user) {
+      return res.status(404).json({
+        message: "user not found",
+      });
+    } else {
+      res.status(200).json(user);
+    }
+  } catch (error: any) {
+    console.log(error)
     res.status(500).json({
       message: "Internal server error",
       error: error.message,
@@ -194,9 +213,26 @@ export const handleSuccess = async (req: Request, res: Response) => {
         isVerified:true,
         //@ts-ignore
         password: null,
+        lastPasswordUpdateTime: new Date(), 
       });
       token = await generateToken(newUser);
       foundUser = newUser;
+      await Profile.create({
+        //@ts-ignore
+        userId: newUser.id,
+        profileImage:"",
+        fullName:newUser.name, 
+        email:newUser.email,
+        gender: "", 
+        birthdate: "", 
+        preferredLanguage: "", 
+        preferredCurrency: "", 
+        street: "",
+        city: "",
+        state: "",
+        postalCode:"",
+        country: "",
+      })
     } else {
       token = await generateToken(foundUser);
     }
@@ -236,7 +272,7 @@ export const getProfileController = async (req: Request, res: Response) => {
       res.status(404).json({ status: 404, message: "profile not found!" });
     } else {
       const { dataValues } = profile;
-      const { id, userId, email, ...filteredProfile } = dataValues;
+      const { id, userId,...filteredProfile } = dataValues;
       res.status(200).json(filteredProfile);
     }
   } catch (error) {
@@ -247,6 +283,7 @@ export const getProfileController = async (req: Request, res: Response) => {
 export const updateProfileController = async (req: Request, res: Response) => {
   try{  
        const userId =  (req as any).user.id;
+       const user = (req as any).user;
        const profileData = req.body; 
        const file = req.file
        let profileImage;
@@ -268,6 +305,7 @@ export const updateProfileController = async (req: Request, res: Response) => {
         userId,  
         { ...profileData, profileImage }
        );
+       await updateUserInfo(user,profileData.fullName)
        res.status(200).json({
            status: 200,
            message: "You updated your profile sucessfully!",

@@ -20,6 +20,7 @@ import {
   updateForgotPassword,
   verifyUserAccessToken,
   verifyUserEmail,
+  getUser
 } from "./users";
 import {
   getProducts,
@@ -117,7 +118,7 @@ const options = {
     },
 
     "/api/v1/users/me": {
-      get: verifyUserAccessToken,
+      get: getUser,
     },
     "/api/v1/roles": {
       get: getRoles,

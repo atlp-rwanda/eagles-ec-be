@@ -3,7 +3,7 @@ import { hashedPassword } from "../utils/hashPassword";
 import passport from "passport";
 import Profile, { ProfileAttributes } from "../sequelize/models/profiles";
 import { Role } from "../sequelize/models/roles";
-import { error } from "console";
+import { error, profile } from "console";
 import { sendEmailService } from "./mail.service";
 import { Op, QueryTypes } from "sequelize";
 import userRoutes from "../routes/userRoutes";
@@ -33,6 +33,7 @@ export const getAllUsers = async () => {
   try {
     const users = await User.findAll({
       attributes: ['id', 'name', 'username', 'email','lastPasswordUpdateTime', 'roleId', 'createdAt', 'updatedAt','isActive'],
+      include: [ {model: Profile,  as: "profile" }]
     });
     if (users.length === 0) {
       console.log("no user");
@@ -43,6 +44,26 @@ export const getAllUsers = async () => {
     throw new Error(error.message);
   }
 };
+
+export const getUserById = async (id: number) => {
+  try {
+    const user = await User.findByPk(id, {
+      include: [ {model: Profile,  as: "profile" }]
+    });
+    if (!user) {
+      return null;
+    }
+    return user;
+  } catch (error: any) {
+    // console.log(error.message);
+    throw new Error(error);
+  }
+};
+
+export const updateUserInfo = async(user: User,name:string) => {
+  const updatedInfo = await User.update({ name: name}, { where: { id: user.id}})
+  return updatedInfo;
+;}
 
 export const loggedInUser = async (email: string) => {
   try {
@@ -79,8 +100,8 @@ export const createUserService = async (name: string, email: string, username: s
       // @ts-ignore
       userId: user.id,
       profileImage:"",
-      fullName: "", 
-      email: "",
+      fullName:user.name, 
+      email:user.email,
       gender: "", 
       birthdate: "", 
       preferredLanguage: "", 

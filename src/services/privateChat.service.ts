@@ -3,6 +3,7 @@ import PrivateChat from "../sequelize/models/privateChats";
 import Message from "../sequelize/models/messages";
 import { findUserById } from "./user.service";  
 import {Op} from "sequelize";
+import Profile from "../sequelize/models/profiles";
 
 export const createPrivateChat = async (userId: number, receiverId: number) => {
     try {
@@ -48,27 +49,48 @@ export const CreatePrivateMessage = async(message:any) => {
     }
 };
 
-export const getAllUserPrivateChats = async(userId: number) => {
-    try{
-        const userChats = await PrivateChat.findAll({
-            where: {
-                [Op.or]: [
-                    {userId: userId},
-                    {receiverId: userId}
-                ]},
-            include: [
+export const getAllUserPrivateChats = async (userId: number) => {
+    try {
+      const userChats = await PrivateChat.findAll({
+        where: {
+            [Op.or]: [
+              { userId: userId },
+              { receiverId: userId }
+            ]
+          },
+          include: [
+            {
+              model: Message,
+              as: 'messages'
+            },
+            {
+              model: User,
+              as: 'sender',
+              include: [
                 {
-                    model: Message,
-                    as: "messages"
-                }]
+                  model: Profile,
+                  as: 'profile'
+                }
+              ]
+            },
+            {
+              model: User,
+              as: 'receiver',
+              include: [
+                {
+                  model: Profile,
+                  as: 'profile'
+                }
+              ]
             }
-        );
-        return userChats
+          ]
+        });
+      return userChats;
+    } catch (error) {
+        console.log(error)
+    //   throw new Error(`Error while Fetching your Chats: ${error}`);
     }
-    catch(error){
-        throw new Error(`Error while Fetching your Chats: ${error}`);
-    }
-};
+  };
 
 export const getUserToUserPrivateMessages = async (userId: number, receiverId: number) =>{
     try{
