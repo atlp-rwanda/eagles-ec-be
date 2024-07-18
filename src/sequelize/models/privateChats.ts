@@ -56,17 +56,22 @@ PrivateChat.init({
     modelName:"PrivateChats"
 });
 
-User.hasMany(PrivateChat,{
-    foreignKey: 'userId'
-})
-PrivateChat.belongsTo(User,{ 
-    foreignKey: 'userId' 
-})
-User.hasMany(PrivateChat,{
-    foreignKey: 'receiverId'
-})
-PrivateChat.belongsTo(User,{ 
-    foreignKey: 'receiverId' 
-})
+User.hasMany(PrivateChat, {
+    foreignKey: 'userId',
+    as: 'sentChats'
+});
+PrivateChat.belongsTo(User, {
+    foreignKey: 'userId',
+    as: 'sender'
+});
+
+User.hasMany(PrivateChat, {
+    foreignKey: 'receiverId',
+    as: 'receivedChats'
+});
+PrivateChat.belongsTo(User, {
+    foreignKey: 'receiverId',
+    as: 'receiver'
+});
 
 export default PrivateChat;

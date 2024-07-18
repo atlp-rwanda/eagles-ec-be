@@ -20,7 +20,6 @@ let users = new Map<string, string>();
                 users.set(userId, socket.id)
                 
             }
-            
         })
         socket.on('disconnect', () => {
             io.emit('removed');
@@ -48,8 +47,9 @@ let users = new Map<string, string>();
     });
      
 }
-export const getSocketIdOfUser =( userId:string ) =>{
-    return users.get(userId)
+
+export const getSocketIdOfUser =( userId: string ) =>{
+    return users.get(JSON.stringify(userId))
 }
 
 export default socket;

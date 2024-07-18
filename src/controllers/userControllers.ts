@@ -42,6 +42,26 @@ export const fetchAllUsers = async (req: Request, res: Response) => {
     });
   }
 };
+export const fetchUserById = async (req: Request, res: Response) => {
+  try {
+    // @ts-ignore
+    const userId = req.user?.id;
+    const user = await userService.getUserById(Number(userId));
+    if (!user) {
+      return res.status(404).json({
+        message: "user not found",
+      });
+    } else {
+      res.status(200).json(user);
+    }
+  } catch (error: any) {
+    console.log(error)
+    res.status(500).json({
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
 
 export const userLogin = async (req: Request, res: Response) => {
   const { email, password } = req.body;

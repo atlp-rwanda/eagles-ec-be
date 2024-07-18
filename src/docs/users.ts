@@ -1,5 +1,5 @@
-import { response } from "express"
-import { format } from "path"
+import { response } from "express";
+import { format } from "path";
 
 export const userSchema = {
   type: "object",
@@ -16,12 +16,12 @@ export const userSchema = {
     password: {
       type: "string",
     },
-}
-}
+  },
+};
 
-export const loginSchema ={
+export const loginSchema = {
   type: "object",
-  properties :{
+  properties: {
     email: {
       type: "string",
       format: "email",
@@ -47,13 +47,12 @@ export const updatePasswordSchema = {
   },
 };
 
-
 export const profileSchema = {
   type: "object",
-  properties :{
-    profileImage:{
-     type: "string",
-     format: "binary"
+  properties: {
+    profileImage: {
+      type: "string",
+      format: "binary",
     },
     fullName: {
       type: "string",
@@ -85,32 +84,55 @@ export const profileSchema = {
     country: {
       type: "string",
     },
-
   },
-}
+};
 
 export const getUsers = {
-    tags: ["Users"],
-    summary: "Get all users",
-    responses: {
-      200: {
-        description: "OK",
-        content: {
-          "application/json": {
-            schema: {
-              type: "array",
-              items: {
-                $ref: "#/components/schemas/User",
+  tags: ["Users"],
+  summary: "Get all users",
+  responses: {
+    200: {
+      description: "OK",
+      content: {
+        "application/json": {
+          schema: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/User",
+            },
+          },
+        },
+      },
+    },
+  },
+  password: {
+    type: "string",
+  },
+};
+export const getUser = {
+  tags: ["Users"],
+  security: [{ bearerAuth: [] }],
+  summary: "Get my profile",
+  responses: {
+    200: {
+      description: "OK",
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            $ref: "#/components/schemas/User",
+            profile: {
+              schema: {
+                type: "object",
+                $ref: "#/components/schemas/Profile",
               },
             },
           },
         },
       },
     },
-    password: {
-      type: "string",
-    },
-  }
+  },
+};
 
 export const createUsers = {
   tags: ["Users"],
@@ -133,32 +155,32 @@ export const createUsers = {
           schema: {
             $ref: "#/components/schemas/User",
           },
-       },
-     }
-    }
-    }
-  }
-    
-    export const  getProfileUser = {
-      tags: ["Users"],
-      security: [{ bearerAuth: [] }],
-      summary: "Get a profile",
-      responses: {
-        200: {
-          description: "OK",
-          content: {
-            "application/json": {
-              schema: {
-                type: "array",
-                items: {
-                  $ref: "#/components/schemas/Profile",
-                },
-              },
+        },
+      },
+    },
+  },
+};
+
+export const getProfileUser = {
+  tags: ["Users"],
+  security: [{ bearerAuth: [] }],
+  summary: "Get a profile",
+  responses: {
+    200: {
+      description: "OK",
+      content: {
+        "application/json": {
+          schema: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Profile",
             },
           },
         },
       },
-    }
+    },
+  },
+};
 
 export const loginAsUser = {
   tags: ["Users"],
@@ -191,37 +213,36 @@ export const loginAsUser = {
     },
   },
 };
-    export const updateProfile = {
-      tags: ["Users"],
-      security: [{bearerAuth: []}],
-      summary: "Update user profile",
-      requestBody: {
-        required: true,
-        content: {
-          "multipart/form-data": {
-            schema: {
-              $ref: "#/components/schemas/Profile",
-            },
+export const updateProfile = {
+  tags: ["Users"],
+  security: [{ bearerAuth: [] }],
+  summary: "Update user profile",
+  requestBody: {
+    required: true,
+    content: {
+      "multipart/form-data": {
+        schema: {
+          $ref: "#/components/schemas/Profile",
+        },
+      },
+    },
+  },
+  responses: {
+    201: {
+      description: "Updated",
+      content: {
+        "application/json": {
+          schema: {
+            $ref: "#/components/schemas/Profile",
           },
         },
       },
-      responses: {
-        201: {
-          description: "Updated",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/Profile",
-              },
-            },
-          },
-        },
-        400: {
-          description: "Bad request",
-        },
-      },
-    }
-  
+    },
+    400: {
+      description: "Bad request",
+    },
+  },
+};
 
 export const passwordUpdate = {
   tags: ["Users"],
@@ -314,7 +335,7 @@ export const verifyUserAccessToken = {
   },
 };
 
-export const updateUserRole ={
+export const updateUserRole = {
   tags: ["Users"],
   security: [{ bearerAuth: [] }],
   summary: "Update user role",
@@ -381,8 +402,8 @@ export const changeUserAccountStatus = {
     },
     500: {
       description: "Internal Server Error",
-    }
-  }
+    },
+  },
 };
 
 export const logUserOut = {
@@ -398,10 +419,9 @@ export const logUserOut = {
     },
     500: {
       description: "Internal Server Error",
-    }
-  }
-
-}
+    },
+  },
+};
 
 export const sendResetLink = {
   tags: ["Users"],
@@ -416,25 +436,25 @@ export const sendResetLink = {
           properties: {
             email: {
               type: "string",
-              description: "The email address of the user"
-            }
+              description: "The email address of the user",
+            },
           },
-          required: ["email"]
-        }
-      }
-    }
+          required: ["email"],
+        },
+      },
+    },
   },
   responses: {
     200: {
-      description: "Password reset link sent successfully"
+      description: "Password reset link sent successfully",
     },
     400: {
-      description: "Bad request"
+      description: "Bad request",
     },
     500: {
-      description: "Internal server error"
-    }
-  }
+      description: "Internal server error",
+    },
+  },
 };
 
 export const updateForgotPassword = {
@@ -450,36 +470,36 @@ export const updateForgotPassword = {
           properties: {
             token: {
               type: "string",
-              description: "The reset token sent to the user's email"
+              description: "The reset token sent to the user's email",
             },
             password: {
               type: "string",
-              description: "The new password"
+              description: "The new password",
             },
             confirmPassword: {
               type: "string",
-              description: "Confirm new password"
-            }
+              description: "Confirm new password",
+            },
           },
-          required: ["token", "newPassword", "confirmPassword"]
-        }
-      }
-    }
+          required: ["token", "newPassword", "confirmPassword"],
+        },
+      },
+    },
   },
   responses: {
     200: {
-      description: "Password updated successfully"
+      description: "Password updated successfully",
     },
     400: {
-      description: "Invalid or expired token"
+      description: "Invalid or expired token",
     },
     404: {
-      description: "User not found"
+      description: "User not found",
     },
     500: {
-      description: "Internal server error"
-    }
-  }
+      description: "Internal server error",
+    },
+  },
 };
 export const verifyUserEmail = {
   tags: ["Users"],
@@ -494,26 +514,26 @@ export const verifyUserEmail = {
           properties: {
             email: {
               type: "string",
-              description: "The user's email address"
-            }
+              description: "The user's email address",
+            },
           },
-          required: ["email"]
-        }
-      }
-    }
+          required: ["email"],
+        },
+      },
+    },
   },
   responses: {
     200: {
-      description: "Verification email sent successfully"
+      description: "Verification email sent successfully",
     },
     400: {
-      description: "Invalid email address"
+      description: "Invalid email address",
     },
     404: {
-      description: "User not found"
+      description: "User not found",
     },
     500: {
-      description: "Internal server error"
-    }
-  }
+      description: "Internal server error",
+    },
+  },
 };
