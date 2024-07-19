@@ -57,8 +57,10 @@ export const placeOrder = async (cart: CartAttributes) => {
 		const cartItem = await OrderItem.create(
 			{
 				orderId: order.id as number,
+				// @ts-ignore
+				userId: item.product.userId ,
 				productId: item.productId,
-				quantity: item.quantity
+				quantity: item.quantity,
 			}
 		)
 	};

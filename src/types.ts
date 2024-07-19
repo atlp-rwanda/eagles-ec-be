@@ -17,13 +17,18 @@ export enum SUBJECTS {
   REQUEST_2FA = "Request for 2FA",
   VERIFY_LOGIN = "Verify that It's you",
   DISABLE_2FA = "Disable 2-Factor Authentication",
-  PAYMENT_CONFIRMATION = "Payment Confirmation"
+  PAYMENT_CONFIRMATION = "Payment Confirmation",
+  ORDER_STATUS_UPDATED = "Status order updated."
 }
 
 export enum STATUS {
   PENDING = "Pending",
   SUCCESS = "Success",
   FAILED = "Failed",
+}
+
+export interface UserId {
+  id: string
 }
 
 export interface ProductType{

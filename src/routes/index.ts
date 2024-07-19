@@ -8,6 +8,7 @@ import cartRoutes from "./cartRoutes";
 import notificationRoutes from "./notificationRoutes";
 import paymentRouter from "./paymentRoutes";
 import PrivateChatRoutes from "./privateChatRoutes";
+import orderRouter from "./orderRoute";
 const appROutes = Router();
 
 appROutes.use("/chats", PrivateChatRoutes);
@@ -19,4 +20,5 @@ appROutes.use("/messages", joinChatRoomRoutes);
 appROutes.use("/carts", cartRoutes);
 appROutes.use("/notifications", notificationRoutes);
 appROutes.use("/payment", paymentRouter);
+appROutes.use("/orders", orderRouter)
 export default appROutes;

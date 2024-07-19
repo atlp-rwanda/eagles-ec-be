@@ -1,6 +1,9 @@
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../../config/dbConnection";
 import Product from "./products";
+import Order from "./orders";
+import User from "./users"
+import Profile from "./profiles";
 
 
 export interface orderItemAttributes {
@@ -56,5 +59,10 @@ OrderItem.belongsTo(Product, {
   foreignKey: "productId",
   as: "product"
 });
+OrderItem.belongsTo(User,{
+  foreignKey: "userId",
+  as: "user"
+})
+
 
 export default OrderItem;
