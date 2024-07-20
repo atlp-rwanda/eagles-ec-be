@@ -60,6 +60,11 @@ export const getUserById = async (id: number) => {
   }
 };
 
+export const updateUserInfo = async(user: User,name:string) => {
+  const updatedInfo = await User.update({ name: name}, { where: { id: user.id}})
+  return updatedInfo;
+;}
+
 export const loggedInUser = async (email: string) => {
   try {
     const user: any = await User.findOne({
@@ -95,8 +100,8 @@ export const createUserService = async (name: string, email: string, username: s
       // @ts-ignore
       userId: user.id,
       profileImage:"",
-      fullName: "", 
-      email: "",
+      fullName:user.name, 
+      email: user.email,
       gender: "", 
       birthdate: "", 
       preferredLanguage: "", 

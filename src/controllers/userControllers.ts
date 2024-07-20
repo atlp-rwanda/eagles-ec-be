@@ -11,7 +11,7 @@ import User from "../sequelize/models/users";
 import { verifyOtpTemplate } from "../email-templates/verifyotp";
 import { getProfileServices, updateProfileServices } from "../services/user.service";
 import uploadFile from "../utils/handleUpload";
-import { updateUserRoleService } from "../services/user.service";
+import { updateUserRoleService,updateUserInfo } from "../services/user.service";
 import { generateRandomNumber } from "../utils/generateRandomNumber";
 import { env } from "../utils/env";
 import { Emailschema, resetPasswordSchema } from "../schemas/resetPasswordSchema";
@@ -78,7 +78,7 @@ export const userLogin = async (req: Request, res: Response) => {
     if (!match) {
       res.status(401).json({
         status: 401,
-        message: " User email or password is incorrect!",
+        message: " Invalid credentials!",
       });
     } else {
       // @ts-ignore
@@ -214,9 +214,26 @@ export const handleSuccess = async (req: Request, res: Response) => {
         isVerified:true,
         //@ts-ignore
         password: null,
+        lastPasswordUpdateTime: new Date(),
       });
       token = await generateToken(newUser);
       foundUser = newUser;
+      await Profile.create({
+        //@ts-ignore
+        userId: newUser.id,
+        profileImage:"",
+        fullName:newUser.name, 
+        email:newUser.email,
+        gender: "", 
+        birthdate: "", 
+        preferredLanguage: "", 
+        preferredCurrency: "", 
+        street: "",
+        city: "",
+        state: "",
+        postalCode:"",
+        country: "",
+      })
     } else {
       token = await generateToken(foundUser);
     }
@@ -256,7 +273,7 @@ export const getProfileController = async (req: Request, res: Response) => {
       res.status(404).json({ status: 404, message: "profile not found!" });
     } else {
       const { dataValues } = profile;
-      const { id, userId, email, ...filteredProfile } = dataValues;
+      const { id, userId,...filteredProfile } = dataValues;
       res.status(200).json(filteredProfile);
     }
   } catch (error) {
@@ -267,6 +284,7 @@ export const getProfileController = async (req: Request, res: Response) => {
 export const updateProfileController = async (req: Request, res: Response) => {
   try{  
        const userId =  (req as any).user.id;
+       const user = (req as any).user;
        const profileData = req.body; 
        const file = req.file
        let profileImage;
@@ -288,6 +306,7 @@ export const updateProfileController = async (req: Request, res: Response) => {
         userId,  
         { ...profileData, profileImage }
        );
+       await updateUserInfo(user,profileData.fullName)
        res.status(200).json({
            status: 200,
            message: "You updated your profile sucessfully!",
