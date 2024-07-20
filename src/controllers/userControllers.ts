@@ -69,7 +69,7 @@ export const userLogin = async (req: Request, res: Response) => {
   if (!user || user === null) {
     res.status(404).json({
       status: 404,
-      message: "User Not Found ! Please Register new ancount",
+      message: "Invalid credentials",
     });
   } else {
     accessToken = await generateToken(user);
