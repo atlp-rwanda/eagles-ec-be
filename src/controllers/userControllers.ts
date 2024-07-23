@@ -70,7 +70,7 @@ export const userLogin = async (req: Request, res: Response) => {
   if (!user || user === null) {
     res.status(404).json({
       status: 404,
-      message: "User Not Found ! Please Register new ancount",
+      message: "Invalid credentials!",
     });
   } else {
     accessToken = await generateToken(user);
@@ -462,7 +462,11 @@ export const verifyUserController = async (req: Request, res: Response): Promise
     // Extract token from the request query
     const token = req.query.token as string;
     const result = await userService.verifyNewUser(token);
-    res.status(result.status).json({ message: result.message });
+    if (result.status === 200) {
+      res.redirect(result.redirectLogin);
+    } else {
+      res.status(result.status).json({ message: result.message });
+    }
   } catch (error) {
     res.status(500).json({ error: 'Failed to verify new user.' });
   }

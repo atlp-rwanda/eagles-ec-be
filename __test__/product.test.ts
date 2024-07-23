@@ -124,8 +124,8 @@ describe("Testing product Routes", () => {
       const token = generateVerificationToken('soleil@soleil0w.com', 60);
       const response = await request(app)
                       .get(`/api/v1/users/verify-user?token=${token}`)
-            expect(response.status).toBe(200)
-            expect(response.body.message).toBe('User verified successfully.')
+      expect(response.status).toBe(302);
+      expect(response.headers.location).toBe(`${process.env.FE_URL}/verify-user`);
     },60000)
 
     test("should login an buyer", async () =>{
@@ -148,8 +148,8 @@ describe("Testing product Routes", () => {
       const token = generateVerificationToken('admin1@example.com', 60);
       const response = await request(app)
                       .get(`/api/v1/users/verify-user?token=${token}`)
-            expect(response.status).toBe(200)
-            expect(response.body.message).toBe('User verified successfully.')
+      expect(response.status).toBe(302);
+      expect(response.headers.location).toBe(`${process.env.FE_URL}/verify-user`);
     },60000)
     test("should login an Admin", async () =>{
         const response = await request(app).post("/api/v1/users/login").send({
@@ -163,8 +163,8 @@ describe("Testing product Routes", () => {
       const token = generateVerificationToken(dummySeller.email, 60);
       const response = await request(app)
                       .get(`/api/v1/users/verify-user?token=${token}`)
-            expect(response.status).toBe(200)
-            expect(response.body.message).toBe('User verified successfully.')
+      expect(response.status).toBe(302);
+      expect(response.headers.location).toBe(`${process.env.FE_URL}/verify-user`);
     },60000)
 
     test("should update dummyseller's role to seller", async () => {
