@@ -118,9 +118,10 @@ describe("Testing user Routes", () => {
     it("It should verify user account.",async()=>{
       const token = generateVerificationToken(userData.email, 60);
       const response = await request(app)
-                      .get(`/api/v1/users/verify-user?token=${token}`)
-            expect(response.status).toBe(200)
-            expect(response.body.message).toBe('User verified successfully.')
+       .get(`/api/v1/users/verify-user?token=${token}`)
+        expect(response.status).toBe(302);
+        expect(response.headers.location).toBe(`${process.env.FE_URL}/verify-user`);
+                      
     },60000)
 
 
@@ -213,9 +214,10 @@ describe("Testing user Routes", () => {
   it("It should verify user account.",async()=>{
     const token = generateVerificationToken('admin1@example.com', 60);
     const response = await request(app)
-                    .get(`/api/v1/users/verify-user?token=${token}`)
-          expect(response.status).toBe(200)
-          expect(response.body.message).toBe('User verified successfully.')
+    .get(`/api/v1/users/verify-user?token=${token}`)
+    expect(response.status).toBe(302);
+    expect(response.headers.location).toBe(`${process.env.FE_URL}/verify-user`);
+    
   },60000)
 
   test("should login an Admin", async () =>{
@@ -229,9 +231,9 @@ describe("Testing user Routes", () => {
       const token = generateVerificationToken(dummySeller.email, 60);
       const response = await request(app)
                       .get(`/api/v1/users/verify-user?token=${token}`)
-            expect(response.status).toBe(200)
-            expect(response.body.message).toBe('User verified successfully.')
-    },60000)
+    expect(response.status).toBe(302);
+    expect(response.headers.location).toBe(`${process.env.FE_URL}/verify-user`);
+      },60000)
 
     test("should return 200 when all roles are fetched", async () => {
       const response = await request(app)
@@ -591,9 +593,10 @@ describe("Verifying user account",()=>{
     await User.create(userData)
     const token = generateVerificationToken(userData.email, 60);
     const response = await request(app)
-                    .get(`/api/v1/users/verify-user?token=${token}`)
-          expect(response.status).toBe(200)
-          expect(response.body.message).toBe('User verified successfully.')
+      .get(`/api/v1/users/verify-user?token=${token}`)
+      expect(response.status).toBe(302);
+      expect(response.headers.location).toBe(`${process.env.FE_URL}/verify-user`);
+                    
   },60000)
 
   it("It should send a verification link.",async()=>{
