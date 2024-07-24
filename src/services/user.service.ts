@@ -115,7 +115,7 @@ export const createUserService = async (name: string, email: string, username: s
 
      const subject = 'Please verify your email address';
      const token = generateVerificationToken(user.email, 60);
-     const verificationLink = `${process.env.REMOTE_URL || `${process.env.LOCAL_URL}:${process.env.PORT}`}/api/v1/users/verify-user?token=${token}`;
+     const verificationLink = `${process.env.REMOTE_URL || process.env.LOCAL_URL}/api/v1/users/verify-user?token=${token}`;
       
      await sendEmailService(user,subject,verifyUserEmailTemplate(user.username,verificationLink))
      
@@ -310,7 +310,8 @@ export const verifyNewUser = async (token: string) => {
     await addToBlacklist(token);
     if (updatedRows > 0) {
       await sendEmailService(user,subject,generateEmailVerificationEmail(decodedToken.email))
-      return { status: 200, message: 'User verified successfully.' };
+      const redirectLogin:any = `${process.env.FE_URL}/verify-user`;
+      return { status: 200, redirectLogin };
     } else {
       return { status: 404, message: 'User not found or already verified.' };
     }

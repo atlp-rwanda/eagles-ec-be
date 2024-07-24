@@ -96,9 +96,12 @@ export const updateOrderStatusService = async (userId: string, orderId: string, 
   if (!orderItems.length) {
     throw new Error("Order items not found or not associated with this seller");
   }
+
   for (const item of orderItems) {
     item.status = status;
     await item.save();
   }
+  
   return orderItems;
 };
+
