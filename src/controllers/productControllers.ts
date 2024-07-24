@@ -19,6 +19,7 @@ import { updateProductTemplate } from "../email-templates/updated";
 import { createdProductTemplate } from "../email-templates/created";
 import { createReview, deleteReview, getProductReviews, updateReview } from "../services/product.service";
 import Review from "../sequelize/models/reviews";
+import Product from "../sequelize/models/products";
 
 export const fetchProducts = async (req: Request, res: Response) => {
   try {
@@ -162,18 +163,20 @@ export const productsUpdate = async (req: Request, res: Response) => {
 
 export const removeProducts = async (req: Request, res: Response) => {
   const currentUser: UserAttributes = (req as any).user;
+  const id = req.params.id;
   try {
     const isDeleted = await deleteProduct(req, res);
     if (isDeleted) {
+      const loggedInUser: any = req.user;
+      const product = await Product.findOne({ where: { id, userId: loggedInUser.id } });
       //@ts-ignore
-      await mailService.sendNotification(currentUser.email, "Product deleted", removedProductTemplate(currentUser.username, isDeleted?.name));
+      await mailService.sendNotification(currentUser.email, "Product deleted", removedProductTemplate(currentUser.username, product?.name));
 
       const notification = await Notification.create({
         title: "Product Deleted",
-        //@ts-ignore
-        message: `Your Product ${isDeleted.name} successfully deleted`,
-        //@ts-ignore
-        userId: currentUser.id || undefined,
+
+        message: `Your Product ${product?.name} successfully deleted`,
+        userId: currentUser.id as number,
       });
 
       notificationEmitter.emit("deleted", notification.dataValues);
