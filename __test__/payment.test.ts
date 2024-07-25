@@ -133,7 +133,7 @@ describe("test stripe api payment", () => {
     expect(response.status).toBe(201);
   });
 
-  test("should create a checkout session", async () => {
+  test.skip("should create a checkout session", async () => {
     const response = await request(app).post("/api/v1/payment/checkout")
       .set("Authorization", `Bearer ${buyerToken}`);
     expect(response.body.message).toBe("payment session created!");

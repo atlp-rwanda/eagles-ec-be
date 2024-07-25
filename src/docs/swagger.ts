@@ -60,7 +60,7 @@ const options = {
       description: "Development server",
     },
     {
-      url: "https://eagles-ec-be-development.onrender.com/",
+      url: "https://eagles-ec-be-production.up.railway.app/",
       description: "Production server",
     },
   ],
