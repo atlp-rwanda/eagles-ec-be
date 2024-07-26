@@ -9,7 +9,7 @@ import stripe from "../config/stripe";
 import dotenv from "dotenv";
 dotenv.config()
 
-const BASE_URL = process.env.IS_REMOTE === "true" ? process.env.REMOTE_URL : `http://localhost:${process.env.PORT}`;
+const BASE_URL = process.env.IS_REMOTE === "true" ? process.env.FE_URL : process.env.LOCAL_URL;
 
 export const createCheckoutSession = async (req: Request, res: Response) => {
     const user: any = req.user;
@@ -22,8 +22,8 @@ export const createCheckoutSession = async (req: Request, res: Response) => {
             line_items,
             mode: "payment",
             customer: customer.id,
-            success_url: `${BASE_URL}/api/v1/payment/success?sessionId={CHECKOUT_SESSION_ID}&userId=${user.id}`,
-            cancel_url: `${BASE_URL}/api/v1/payment/canceled`,
+            success_url: `${BASE_URL}/payment/success?sessionId={CHECKOUT_SESSION_ID}&userId=${user.id}`,
+            cancel_url: `${BASE_URL}/payment/canceled`,
         });
         return res.status(200).json({
             message: "payment session created!",

@@ -115,8 +115,7 @@ export const createUserService = async (name: string, email: string, username: s
 
      const subject = 'Please verify your email address';
      const token = generateVerificationToken(user.email, 60);
-     const verificationLink = `${process.env.REMOTE_URL || process.env.LOCAL_URL}/api/v1/users/verify-user?token=${token}`;
-      
+     const verificationLink = `${process.env.FE_URL}/verify-user?token=${token}`;
      await sendEmailService(user,subject,verifyUserEmailTemplate(user.username,verificationLink))
      
     return user;
