@@ -1,10 +1,15 @@
 import * as wishlistService from "../services/wishlist.service";
 import { Request, Response } from "express";
 import { wishSchema } from "../schemas/wishShema";
+import { notificationEmitter } from "../utils/server";
+import Notification from "../sequelize/models/Notification";
+import { IUser } from "../types";
+import Product from "../sequelize/models/products";
 
 export const addToWishes = async (req: Request, res: Response) => {
   //@ts-ignore
   const id = req.user.id;
+  const currentUser: IUser = (req as any).user;
   try {
     const { error, value } = wishSchema.validate(req.body);
     if (error) {
@@ -14,10 +19,10 @@ export const addToWishes = async (req: Request, res: Response) => {
       });
     }
     const product = await wishlistService.getProduct(value.productId);
-    if(!product){
+    if (!product) {
       return res.status(404).json({
-        message: 'product not found'
-      })
+        message: "product not found",
+      });
     }
     const isProdExisting = await wishlistService.getSingleWish(id, value.productId);
     if (isProdExisting) {
@@ -27,6 +32,14 @@ export const addToWishes = async (req: Request, res: Response) => {
     }
     const wish = await wishlistService.addToWishlist(id, value.productId);
     if (wish) {
+      const notification = await Notification.create({
+        title: "Product Added to Wishlist",
+        message: `${currentUser.name} has added your product ${product.name} to his wishlist`,
+        userId: wish.sellerId,
+      });
+
+      notificationEmitter.emit("wishlist", notification.dataValues);
+
       return res.status(201).json({
         message: "product was added to your wishlist",
       });
@@ -92,14 +105,32 @@ export const deleteWish = async (req: Request, res: Response) => {
   //@ts-ignore
   const id = req.user.id;
   const productId = Number(req.params.id);
+
+  const currentUser: IUser = (req as any).user;
   try {
     const isOwner = await wishlistService.getSingleWish(id, productId);
+    const product = await Product.findByPk(productId);
+
+    if (!product) {
+      return res.status(404).json({
+        message: "product not found",
+      });
+    }
     if (!isOwner) {
       return res.status(404).json({
         message: "product does not exist in your wishes",
       });
     } else {
       await wishlistService.removeProduct(id, productId);
+
+      const notification = await Notification.create({
+        title: "Product Removed from Wishlist",
+        message: `${currentUser.name} has removed your product ${product?.name} from his wishlist`,
+        userId: product.userId,
+      });
+
+      notificationEmitter.emit("wishlist", notification.dataValues);
+
       return res.status(200).json({
         message: "product was removed from your wishes",
       });

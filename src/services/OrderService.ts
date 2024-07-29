@@ -99,9 +99,9 @@ export const updateOrderStatusService = async (userId: string, orderId: string, 
 
   for (const item of orderItems) {
     item.status = status;
+
     await item.save();
   }
-  
+
   return orderItems;
 };
-
