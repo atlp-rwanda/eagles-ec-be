@@ -5,11 +5,12 @@ import { notificationEmitter } from "../utils/server";
 import Notification from "../sequelize/models/Notification";
 import { IUser } from "../types";
 import Product from "../sequelize/models/products";
+import { UserAttributes } from "../sequelize/models/users";
 
 export const addToWishes = async (req: Request, res: Response) => {
   //@ts-ignore
   const id = req.user.id;
-  const currentUser: IUser = (req as any).user;
+  const currentUser = (req as any).user;
   try {
     const { error, value } = wishSchema.validate(req.body);
     if (error) {
@@ -34,9 +35,15 @@ export const addToWishes = async (req: Request, res: Response) => {
     if (wish) {
       const notification = await Notification.create({
         title: "Product Added to Wishlist",
-        message: `${currentUser.name} has added your product ${product.name} to his wishlist`,
+        message: `${currentUser?.dataValues?.name} has added your product ${product?.name} to his wishlist`,
         userId: wish.sellerId,
       });
+
+      if (currentUser) {
+        console.log("user who added product in wishlist", currentUser.dataValues);
+      } else {
+        console.log("no currentUser");
+      }
 
       notificationEmitter.emit("wishlist", notification.dataValues);
 

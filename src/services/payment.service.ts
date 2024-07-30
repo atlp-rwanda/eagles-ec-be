@@ -67,9 +67,13 @@ export const placeOrder = async (cart: CartAttributes) => {
     }
     const notification = await Notification.create({
       title: "Your have new order",
-      message: `${user?.username} has successfuly placed New Order on your product ${product?.name}`,
+      message: `${user?.dataValues.username} has successfuly placed New Order on your product ${product?.name}`,
       userId: product?.userId,
     });
+
+    if (user) {
+      console.log(user);
+    }
 
     notificationEmitter.emit("new order", notification.dataValues);
   }
