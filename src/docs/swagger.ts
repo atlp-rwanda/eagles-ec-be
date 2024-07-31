@@ -43,6 +43,7 @@ import { createReviewProduct, deleteReview, getReviewProduct, reviewSchema, upda
 import { getAdProducts } from "./products";
 import {PrivateChatSchema, getAllUserPrivateChats, getUserToUserPrivateMessages, createPrivateChat } from "./privateChatDoc"
 import { StatusSchema, buyerAndSellerOrder, statusUpdate } from "./orders";
+import { getSellerStats } from "./stats";
 
 const docRouter = express.Router();
 
@@ -80,7 +81,8 @@ const options = {
     { name: "Carts", description: "Endpoints related to Cart" },
     { name: "Payments", description: "Endpoints related to payments" },
     { name: "PrivateChat", description: "Endpoints related to Private Chat" },
-    {name: "orders", description: "Endpoints related to orders"}
+    {name: "orders", description: "Endpoints related to orders"},
+    {name: "stats", description: "Endpoints related to Seller statistics"}
   ],
 
   paths: {
@@ -205,6 +207,9 @@ const options = {
       },
       "/api/v1/orders/{id}/status": {
         patch: statusUpdate
+      },
+      "/api/v1/stats":{
+        get: getSellerStats
       }
   },
   components: {
