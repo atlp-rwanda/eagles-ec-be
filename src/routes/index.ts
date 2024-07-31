@@ -9,6 +9,7 @@ import notificationRoutes from "./notificationRoutes";
 import paymentRouter from "./paymentRoutes";
 import PrivateChatRoutes from "./privateChatRoutes";
 import orderRouter from "./orderRoute";
+import statsRouter from "./statsRoutes";
 const appROutes = Router();
 
 appROutes.use("/chats", PrivateChatRoutes);
@@ -21,4 +22,5 @@ appROutes.use("/carts", cartRoutes);
 appROutes.use("/notifications", notificationRoutes);
 appROutes.use("/payment", paymentRouter);
 appROutes.use("/orders", orderRouter)
+appROutes.use("/stats", statsRouter);
 export default appROutes;
